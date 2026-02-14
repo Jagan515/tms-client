@@ -1,0 +1,3 @@
+
+export const SET_ANNOUNCEMENTS = "SET_ANNOUNCEMENTS";
+

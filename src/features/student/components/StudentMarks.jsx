@@ -23,22 +23,22 @@ function StudentMarks({ schoolMarks = [], tuitionMarks = [], onSubmitSchoolMarks
         setLoading(true);
         try {
             await onSubmitSchoolMarks(data);
+            setShowModal(false);
         } catch (error) {
-            console.error(error);
+            console.error("Submission failed:", error);
         } finally {
             setLoading(false);
-            setShowModal(false);
         }
     };
 
     return (
         <div className="card-modern shadow-lg border-0 h-100 overflow-hidden bg-white animate-fade-in">
-            <div className="p-4 border-bottom d-flex align-items-center justify-content-between bg-tertiary" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
+            <div className="p-4 border-bottom d-flex flex-wrap align-items-center justify-content-between gap-3 bg-tertiary" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
                 <div className="d-flex align-items-center gap-2">
                     <TrendingUp className="text-primary flex-shrink-0" size={20} />
                     <h6 className="fw-bold mb-0">Academic Performance</h6>
                 </div>
-                <button className="btn btn-primary btn-sm rounded-pill px-3 d-flex align-items-center gap-2 shadow-sm hover-lift" onClick={() => setShowModal(true)}>
+                <button className="btn btn-primary btn-sm rounded-pill px-3 d-flex align-items-center gap-2 shadow-sm hover-lift w-100 w-sm-auto justify-content-center" onClick={() => setShowModal(true)}>
                     <Plus size={14} />
                     <span className="fw-bold" style={{ fontSize: '0.75rem' }}>Submit School Marks</span>
                 </button>

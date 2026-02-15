@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import { login, clearError } from "../redux/authSlice";
-import { Mail, Landmark, Lock, ShieldCheck, UserCheck, Users, GraduationCap, ArrowRight } from "lucide-react";
+import { Mail, Landmark, Lock, ShieldCheck, UserCheck, Users, GraduationCap, ArrowRight, Eye, EyeOff } from "lucide-react";
 
 const RoleSelector = ({ id, label, icon: RoleIcon, active, onSelect }) => (
     <div className="col-6">
@@ -37,7 +37,17 @@ const Login = () => {
         password: ""
     });
 
+    const [showPassword, setShowPassword] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
+
     const [validationErrors, setValidationErrors] = useState({});
+
+    // Update theme based on selected role
+    useEffect(() => {
+        if (!isAuthenticated) {
+            document.documentElement.setAttribute('data-user-role', role);
+        }
+    }, [role, isAuthenticated]);
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -105,14 +115,22 @@ const Login = () => {
         if (validate()) {
             const password = (formData.password || '').trim();
             const credentials = isStudent
-                ? { password, registrationNumber: (formData.registrationNumber || '').trim() }
-                : { password, email: (formData.email || '').trim().toLowerCase() };
+                ? { password, registrationNumber: (formData.registrationNumber || '').trim(), rememberMe }
+                : { password, email: (formData.email || '').trim().toLowerCase(), rememberMe };
             dispatch(login({ role, credentials }));
         }
     };
 
+    const roleBgColors = {
+        student: 'var(--bg-primary)',
+        parent: 'var(--bg-primary)',
+        teacher: '#32213A',
+        developer: '#32213A'
+    };
+
     return (
-        <div className="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-body p-0">
+        <div className="container-fluid min-vh-100 d-flex align-items-center justify-content-center p-0 animate-fade-in"
+            style={{ backgroundColor: roleBgColors[role], transition: 'background-color 0.3s ease' }}>
             {/* Background Decorative Element */}
             <div className="position-absolute top-0 start-50 translate-middle-x rounded-circle opacity-25"
                 style={{ width: '600px', height: '600px', background: 'radial-gradient(circle, var(--bs-primary) 0%, transparent 70%)', filter: 'blur(100px)', zIndex: 0 }}></div>
@@ -133,9 +151,17 @@ const Login = () => {
                     <div className="card rounded-4 shadow-premium border-0 overflow-hidden animate-scale-in">
                         <div className="card-body p-4 p-md-5">
 
+
                             {error && (
                                 <div className="alert alert-danger rounded-3 border-0 small mb-4 py-2" role="alert">
                                     {error}
+                                </div>
+                            )}
+
+                            {isStudent && (
+                                <div className="alert alert-success d-flex align-items-center gap-2 small border-0 mb-4 rounded-3 text-success-emphasis bg-success-subtle">
+                                    <GraduationCap className="flex-shrink-0" size={18} />
+                                    <span>Provide your <b>Registration ID</b> to proceed.</span>
                                 </div>
                             )}
 
@@ -154,7 +180,7 @@ const Login = () => {
                                         {isStudent ? 'Registration Number' : 'Email'}
                                     </label>
                                     <div className="input-group">
-                                        <span className="input-group-text bg-transparent border-end-0 text-muted ps-3">
+                                        <span className="input-group-text border-end-0 text-muted ps-3">
                                             {isStudent ? <Landmark className="w-5 h-5 flex-shrink-0" /> : <Mail className="w-5 h-5 flex-shrink-0" />}
                                         </span>
                                         <input
@@ -185,18 +211,26 @@ const Login = () => {
                                         <label className="form-label small fw-bold text-muted" htmlFor="password">Security Key</label>
                                     </div>
                                     <div className="input-group">
-                                        <span className="input-group-text bg-transparent border-end-0 text-muted ps-3">
+                                        <span className="input-group-text border-end-0 text-muted ps-3">
                                             <Lock className="w-5 h-5 flex-shrink-0" />
                                         </span>
                                         <input
-                                            type="password"
+                                            type={showPassword ? "text" : "password"}
                                             name="password"
                                             id="password"
-                                            className={`form-control form-control-lg border-start-0 ps-0 ${validationErrors.password ? 'is-invalid' : ''}`}
+                                            className={`form-control form-control-lg border-start-0 border-end-0 ps-0 ${validationErrors.password ? 'is-invalid' : ''}`}
                                             placeholder="••••••••"
                                             value={formData.password}
                                             onChange={handleChange}
                                         />
+                                        <button
+                                            type="button"
+                                            className="input-group-text border-start-0 bg-transparent text-muted"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            tabIndex="-1"
+                                        >
+                                            {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                                        </button>
                                     </div>
                                     {validationErrors.password && (
                                         <div className="invalid-feedback d-block small mt-1">
@@ -205,17 +239,33 @@ const Login = () => {
                                     )}
                                 </div>
 
+                                {/* Remember Me */}
+                                <div className="mb-4 d-flex align-items-center">
+                                    <div className="form-check">
+                                        <input
+                                            className="form-check-input"
+                                            type="checkbox"
+                                            id="rememberMe"
+                                            checked={rememberMe}
+                                            onChange={(e) => setRememberMe(e.target.checked)}
+                                        />
+                                        <label className="form-check-label small text-muted" htmlFor="rememberMe">
+                                            Remember me for 24 hours
+                                        </label>
+                                    </div>
+                                </div>
+
                                 {/* Submit */}
                                 <button
                                     type="submit"
-                                    className="btn btn-primary btn-lg w-100 rounded-3 py-3 d-flex align-items-center justify-content-center gap-2"
+                                    className={`btn btn-lg w-100 rounded-3 py-3 d-flex align-items-center justify-content-center gap-2 ${isStudent ? 'btn-dark' : 'btn-primary'}`}
                                     disabled={loading}
                                 >
                                     {loading ? (
                                         <div className="spinner-border spinner-border-sm" role="status"></div>
                                     ) : (
                                         <>
-                                            <span className="fw-bold">Authenticate Session</span>
+                                            <span className="fw-bold">{isStudent ? 'Access Scholar Portal' : 'Authenticate Session'}</span>
                                             <ArrowRight className="w-5 h-5 flex-shrink-0" />
                                         </>
                                     )}

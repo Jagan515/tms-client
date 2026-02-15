@@ -89,9 +89,7 @@ function StudentManagement() {
                     subtitle="Management of active scholar identities and enrollment data"
                 />
                 <div className="d-flex gap-2">
-                    <button className="btn btn-outline-secondary rounded-pill px-4 d-flex align-items-center gap-2 border-dashed" onClick={fetchStudents}>
-                        <RefreshCw size={18} className={loading ? 'animate-spin' : ''} />
-                    </button>
+
                     <button className="btn btn-primary rounded-pill px-4 d-flex align-items-center gap-2 shadow-lg hover-lift" onClick={() => { setSelectedStudent(null); setShowCreateModal(true); }}>
                         <UserPlus size={18} />
                         <span>Enroll New Scholar</span>
@@ -105,7 +103,7 @@ function StudentManagement() {
                         <div className="position-relative">
                             <Search className="position-absolute top-50 translate-middle-y ms-3 text-primary opacity-50" size={18} />
                             <input
-                                className="form-control ps-5 rounded-pill border-0 shadow-sm bg-white"
+                                className="form-control ps-5 rounded-pill shadow-sm"
                                 style={{ height: '48px' }}
                                 placeholder="Search by name, ID..."
                                 value={searchTerm}
@@ -129,12 +127,12 @@ function StudentManagement() {
                     </div>
                     <div className="col-lg-5">
                         <div className="d-flex gap-3 justify-content-lg-end">
-                            <div className="stat-pill d-flex align-items-center gap-2 px-3 py-2 bg-white rounded-3 shadow-sm">
+                            <div className="stat-pill d-flex align-items-center gap-2 px-3 py-2 bg-tertiary rounded-3 shadow-sm">
                                 <Users size={16} className="text-primary" />
                                 <span className="small fw-bold">{students.length} Total Enrolled</span>
                             </div>
 
-                            <div className="stat-pill d-flex align-items-center gap-2 px-3 py-2 bg-white rounded-3 shadow-sm border-start-success">
+                            <div className="stat-pill d-flex align-items-center gap-2 px-3 py-2 bg-tertiary rounded-3 shadow-sm border-start-success">
                                 <ShieldCheck size={16} className="text-success" />
                                 <span className="small fw-bold">Validated Registry</span>
                             </div>
@@ -148,6 +146,7 @@ function StudentManagement() {
                     <div className="d-flex align-items-center gap-2">
                         <Users size={18} className="text-primary" />
                         <h5 className="mb-0 fw-bold">Validated Registry List</h5>
+                        <RefreshCw size={14} className={`ms-2 cursor-pointer transition-all ${loading ? 'animate-spin text-primary' : 'text-muted opacity-50 hover-opacity-100'}`} onClick={fetchStudents} />
                     </div>
                     <div className="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill small fw-bold">
                         {filteredStudents.length} Records Found

@@ -15,25 +15,25 @@ function StudentStats({ student }) {
                         <h3 className="fw-bold mb-1 tracking-tight">{student.name}</h3>
                         <div className="d-flex align-items-center gap-x-2 opacity-75 small">
                             <Hash className="w-3.5 h-3.5 flex-shrink-0" />
-                            <span className="fw-bold">ID: {student.regNo}</span>
+                            <span className="fw-bold">ID: {student.registrationNumber || student.regNo || 'N/A'}</span>
                         </div>
                     </div>
                 </div>
 
-                <div className="d-flex gap-5 px-md-4">
-                    <div className="text-center">
+                <div className="d-flex flex-wrap gap-4 gap-md-5 px-md-4 mt-3 mt-md-0">
+                    <div className="text-center flex-grow-1 flex-md-grow-0">
                         <div className="small opacity-75 mb-1 text-uppercase letter-spacing-1">Current Class</div>
                         <div className="h4 mb-0 fw-bold">{student.class}th Grade</div>
                     </div>
-                    <div className="text-center">
+                    <div className="text-center flex-grow-1 flex-md-grow-0">
                         <div className="small opacity-75 mb-1 text-uppercase letter-spacing-1">Assigned Group</div>
-                        <div className="h4 mb-0 fw-bold">{student.batchName}</div>
+                        <div className="h4 mb-0 fw-bold text-truncate" style={{ maxWidth: '150px' }}>{student.batchName}</div>
                     </div>
                 </div>
             </div>
 
             <div className="p-4 p-md-5 bg-tertiary">
-                <div className="row g-5 align-items-center">
+                <div className="row g-4 g-md-5 align-items-center">
                     <div className="col-md-6">
                         <div className="d-flex align-items-center gap-x-2 mb-3 text-muted small fw-bold text-uppercase letter-spacing-1">
                             <Layout className="w-3.5 h-3.5 flex-shrink-0" />
@@ -55,12 +55,12 @@ function StudentStats({ student }) {
                     </div>
 
                     <div className="col-md-6 d-flex justify-content-md-end">
-                        <div className="d-flex align-items-center gap-x-4 p-4 rounded-4 bg-body border shadow-sm" style={{ minWidth: '280px' }}>
+                        <div className="d-flex align-items-center gap-x-4 p-4 rounded-4 bg-body border shadow-sm w-100" style={{ maxWidth: '340px' }}>
                             <div className={`icon-box rounded-3 bg-${student.pendingFees > 0 ? 'danger' : 'success'}-subtle text-${student.pendingFees > 0 ? 'danger' : 'success'} d-flex align-items-center justify-content-center flex-shrink-0`} style={{ width: '48px', height: '48px' }}>
                                 <Wallet className="w-6 h-6 flex-shrink-0" />
                             </div>
-                            <div>
-                                <small className="text-muted d-block fw-bold text-uppercase letter-spacing-1 mb-1" style={{ fontSize: '0.6rem' }}>Financial Standing</small>
+                            <div className="overflow-hidden">
+                                <small className="text-muted d-block fw-bold text-uppercase letter-spacing-1 mb-1 text-truncate" style={{ fontSize: '0.6rem' }}>Financial Standing</small>
                                 <span className={`h4 mb-0 fw-bold ${student.pendingFees > 0 ? 'text-danger' : 'text-success'}`}>
                                     {student.pendingFees > 0 ? `₹${student.pendingFees.toLocaleString()}` : 'Cleared'}
                                 </span>

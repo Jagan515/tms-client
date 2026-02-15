@@ -30,11 +30,11 @@ function FeeDefaulters({ defaulters = [], onPayLink }) {
                 <table className="table table-hover align-middle mb-0">
                     <thead className="table-light">
                         <tr>
-                            <th className="ps-4">Student Candidate</th>
-                            <th className="text-center">Arrear Depth</th>
-                            <th className="text-center">Arrears Total</th>
-                            <th className="text-center">Persistence</th>
-                            <th className="text-end pe-4">Recovery Action</th>
+                            <th className="ps-4">Scholar Identity</th>
+                            <th className="text-center">Overdue Cycle</th>
+                            <th className="text-center">Cumulative Debt</th>
+                            <th className="text-center">Overdue Aging</th>
+                            <th className="text-end pe-4">Operational Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -53,13 +53,13 @@ function FeeDefaulters({ defaulters = [], onPayLink }) {
                                 </td>
                                 <td className="text-center">
                                     <span className="badge bg-tertiary text-danger border px-3 rounded-pill fw-bold" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
-                                        {d.unpaidMonths} {d.unpaidMonths === 1 ? 'Month' : 'Months'}
+                                        {d.unpaidMonths} {d.unpaidMonths === 1 ? 'Month' : 'Cycle'}
                                     </span>
                                 </td>
                                 <td className="text-center fw-bold text-danger">₹{d.totalPending?.toLocaleString()}</td>
                                 <td className="text-center">
                                     <div className="d-flex flex-column align-items-center gap-1">
-                                        <span className="small fw-bold text-muted">{d.overdueDays} Days Overdue</span>
+                                        <span className="small fw-bold text-muted">{d.overdueDays} Days Elapsed</span>
                                         <div className="progress rounded-pill" style={{ height: '3px', width: '60px' }}>
                                             <div className="progress-bar bg-danger" style={{ width: `${Math.min(d.overdueDays, 100)}%` }}></div>
                                         </div>

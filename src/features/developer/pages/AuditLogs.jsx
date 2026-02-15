@@ -85,7 +85,7 @@ function AuditLogs() {
                         <div className="position-relative">
                             <Search className="position-absolute top-50 translate-middle-y ms-3 text-primary opacity-50" size={18} />
                             <input
-                                className="form-control ps-5 rounded-pill border-0 shadow-sm bg-white"
+                                className="form-control ps-5 rounded-pill shadow-sm"
                                 style={{ height: '48px' }}
                                 placeholder="Filter by event identity..."
                                 value={searchTerm}

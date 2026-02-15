@@ -7,25 +7,28 @@ import {
     LayoutDashboard,
     CalendarCheck,
     Trophy,
-    Wallet,
     Megaphone,
     User,
     ChevronRight,
-    Search
+    Search,
+    BookOpen
 } from "lucide-react";
+
+import { useLocation } from "react-router-dom";
 
 // Student Components
 import StudentStats from "../components/StudentStats";
 import StudentAttendance from "../components/StudentAttendance";
 import StudentMarks from "../components/StudentMarks";
-import StudentFees from "../components/StudentFees";
 import StudentProfile from "../components/StudentProfile";
 import AnnouncementList from "../../../components/announcements/AnnouncementList";
 
 function StudentDashboard() {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState("dashboard");
+    const location = useLocation();
+    const query = new URLSearchParams(location.search);
+    const activeTab = query.get('tab') || 'dashboard';
 
     const fetchDashboard = async () => {
         try {
@@ -53,9 +56,12 @@ function StudentDashboard() {
                 marksData,
                 { withCredentials: true }
             );
-            fetchDashboard();
+            await fetchDashboard();
         } catch (error) {
-            console.error("Failed to submit marks.");
+            console.error("Failed to submit marks.", error);
+            const errorMessage = error.response?.data?.message || 'Server error';
+            alert(`Failed to submit marks: ${errorMessage}`);
+            throw error; // Rethrow to notify caller
         }
     };
 
@@ -71,52 +77,58 @@ function StudentDashboard() {
                     <div className="animate-fade-in">
                         <StudentStats student={student} />
                         <div className="row g-4">
-                            <div className="col-lg-4">
+                            <div className="col-lg-6">
                                 <StudentAttendance history={attendance.history} stats={attendance.stats} />
                             </div>
-                            <div className="col-lg-4">
+                            <div className="col-lg-6">
                                 <StudentMarks
                                     schoolMarks={marks.school}
                                     tuitionMarks={marks.tuition}
                                     onSubmitSchoolMarks={handleSubmitMarks}
                                 />
                             </div>
-                            <div className="col-lg-4">
-                                <StudentFees fees={fees.history} />
-                            </div>
 
                             <div className="col-12 mt-2">
-                                <div className="card-modern shadow-sm p-4 border-0 position-relative overflow-hidden">
-                                    <div className="d-flex justify-content-between align-items-center mb-4">
-                                        <div className="d-flex align-items-center gap-x-2">
-                                            <div className="bg-primary-subtle p-2 rounded-3 d-flex align-items-center justify-content-center">
-                                                <Megaphone className="w-4.5 h-4.5 text-primary flex-shrink-0" />
+                                <div className="card-modern shadow-sm p-4 border-0 position-relative overflow-hidden bg-info-subtle">
+                                    <div className="d-flex justify-content-between align-items-center mb-4 z-1 position-relative">
+                                        <div className="d-flex align-items-center gap-2">
+                                            <div className="bg-white p-2 rounded-circle shadow-sm d-flex align-items-center justify-content-center">
+                                                <Megaphone className="text-info" size={20} />
                                             </div>
-                                            <h5 className="mb-0 fw-bold">Recent Updates</h5>
+                                            <h5 className="mb-0 fw-bold text-dark">Recent Updates & Bulletins</h5>
                                         </div>
-                                        <button className="btn btn-link btn-sm fw-bold text-decoration-none d-flex align-items-center gap-x-1" onClick={() => setActiveTab('announcements')}>
-                                            <span>View Repository</span>
-                                            <ChevronRight className="w-3.5 h-3.5 flex-shrink-0" />
-                                        </button>
+                                        {/* Use Link or simple navigation via router? For now just stay as is, or use anchor */}
+                                        <a href="/student/dashboard?tab=announcements" className="btn btn-sm btn-white rounded-pill px-3 fw-bold shadow-sm d-flex align-items-center gap-1">
+                                            <span>View All</span>
+                                            <ChevronRight size={14} />
+                                        </a>
                                     </div>
-                                    <div className="px-1">
+                                    <div className="px-1 z-1 position-relative">
                                         <AnnouncementList announcements={announcements.slice(0, 3)} />
                                     </div>
-                                    <Megaphone size={120} className="position-absolute text-primary opacity-05" style={{ bottom: '-30px', right: '-20px', pointerEvents: 'none' }} />
+                                    <Megaphone size={180} className="position-absolute text-info opacity-10" style={{ bottom: '-30px', right: '-20px', pointerEvents: 'none' }} />
                                 </div>
                             </div>
                         </div>
                     </div>
                 );
             case "attendance":
-                return <div className="animate-fade-in"><StudentAttendance history={attendance.history} stats={attendance.stats} /></div>;
+                return <div className="animate-fade-in"><StudentAttendance history={attendance.history} stats={attendance.stats} createdAt={student.createdAt} /></div>;
             case "marks":
                 return <div className="animate-fade-in"><StudentMarks schoolMarks={marks.school} tuitionMarks={marks.tuition} onSubmitSchoolMarks={handleSubmitMarks} /></div>;
-            case "fees":
-                return <div className="animate-fade-in"><StudentFees fees={fees.history} /></div>;
+
             case "announcements":
                 return (
-                    <div className="card-modern border-0 shadow-sm p-4 animate-fade-in">
+                    <div className="card-modern border-0 shadow-lg p-4 animate-fade-in bg-white h-100">
+                        <div className="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
+                            <div className="bg-warning-subtle p-3 rounded-circle text-warning">
+                                <Megaphone size={24} />
+                            </div>
+                            <div>
+                                <h4 className="fw-bold mb-1">Notice Board</h4>
+                                <p className="text-muted small mb-0">Official communications and updates</p>
+                            </div>
+                        </div>
                         <AnnouncementList announcements={announcements} />
                     </div>
                 );
@@ -128,40 +140,23 @@ function StudentDashboard() {
     };
 
     return (
-        <div className="p-6 animate-fade-in bg-premium-gradient" style={{ minHeight: '100vh', padding: 'var(--s-6)' }}>
-            <div className="mb-8" style={{ marginBottom: 'var(--s-8)' }}>
-                <PageHeader
-                    title="Scholar Development"
-                    subtitle="Unified view of your learning path and institutional data"
-                />
-            </div>
+        <div className="p-4 p-xl-5 pb-5 mb-5 mb-lg-0 animate-fade-in">
+            {/* Header Section */}
+            <header className="mb-5">
+                <h2 className="fw-bold text-dark mb-1">
+                    {activeTab === 'dashboard' ? 'Overview' :
+                        activeTab === 'attendance' ? 'Attendance Records' :
+                            activeTab === 'marks' ? 'Academic Performance' :
+                                activeTab === 'announcements' ? 'Notice Board' : 'Student Profile'}
+                </h2>
+                <p className="text-muted small mb-0">
+                    {activeTab === 'dashboard' ? `Welcome back, ${student?.name?.split(' ')[0] || 'Scholar'}. Track your progress.` :
+                        'Manage your academic records and updates.'}
+                </p>
+            </header>
 
-            {/* Navigation Navigation Tabs */}
-            <div className="nav-container mb-10 p-1 bg-secondary rounded-4 d-inline-flex flex-wrap gap-1 shadow-sm" style={{ marginBottom: 'var(--s-10)' }}>
-                {[
-                    { id: 'dashboard', label: 'Overview', icon: LayoutDashboard },
-                    { id: 'attendance', label: 'Presence', icon: CalendarCheck },
-                    { id: 'marks', label: 'Performance', icon: Trophy },
-                    { id: 'fees', label: 'Financials', icon: Wallet },
-                    { id: 'announcements', label: 'Bulletin', icon: Megaphone },
-                    { id: 'profile', label: 'ID Card', icon: User },
-                ].map(tab => (
-                    <button
-                        key={tab.id}
-                        className={`btn px-4 py-2.5 rounded-4 d-flex align-items-center gap-x-2 transition-all border-0 ${activeTab === tab.id
-                            ? 'bg-white shadow-sm text-primary fw-bold'
-                            : 'text-secondary opacity-75'
-                            }`}
-                        onClick={() => setActiveTab(tab.id)}
-                    >
-                        <tab.icon className="w-4.5 h-4.5 flex-shrink-0" />
-                        <span className="small">{tab.label}</span>
-                    </button>
-                ))}
-            </div>
-
-            {/* Main Content Area */}
-            <div className="tab-container position-relative" style={{ minHeight: '400px' }}>
+            {/* Content Area */}
+            <div className="animate-fade-in fade-in-up">
                 {renderContent()}
             </div>
         </div>

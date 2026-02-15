@@ -74,8 +74,8 @@ function MarksEntry({ onSubmit, onCancel, loading }) {
                         <Trophy size={20} />
                     </div>
                     <div>
-                        <h5 className="mb-0 fw-bold">Evaluation Ledger Entry</h5>
-                        <p className="text-muted small mb-0">Record performance metrics for tuition-conducted tests</p>
+                        <h5 className="mb-0 fw-bold">Assessment Performance Entry</h5>
+                        <p className="text-muted small mb-0">Record performance metrics for institutional evaluations</p>
                     </div>
                 </div>
                 <button className="btn btn-sm btn-light rounded-circle p-2" onClick={onCancel}>
@@ -130,7 +130,7 @@ function MarksEntry({ onSubmit, onCancel, loading }) {
                             <div className="row g-3">
                                 {students.map(student => (
                                     <div className="col-md-6 col-lg-4" key={student._id}>
-                                        <div className="bg-white p-3 rounded-3 shadow-sm d-flex align-items-center justify-content-between border">
+                                        <div className="bg-white p-3 rounded-3 shadow-sm d-flex align-items-center justify-content-between border transition-all hover-lift">
                                             <div className="d-flex align-items-center gap-2">
                                                 <div className="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center fw-bold small" style={{ width: '28px', height: '28px' }}>
                                                     {student.name?.charAt(0) || '?'}
@@ -161,8 +161,8 @@ function MarksEntry({ onSubmit, onCancel, loading }) {
 
                     <div className="d-flex justify-content-end gap-3 border-top pt-4">
                         <button type="button" className="btn btn-link text-muted fw-bold text-decoration-none" onClick={onCancel}>discard</button>
-                        <button type="submit" className="btn btn-primary px-5 py-2.5 rounded-pill shadow-lg d-flex align-items-center gap-2" disabled={loading || students.length === 0}>
-                            {loading ? <span>Syncing...</span> : <><Save size={18} /><span>Publish Registry</span></>}
+                        <button type="submit" className="btn btn-primary px-5 py-2.5 rounded-pill shadow-lg d-flex align-items-center gap-2 hover-lift" disabled={loading || students.length === 0}>
+                            {loading ? <span>Syncing...</span> : <><Save size={18} /><span>Authorize Publication</span></>}
                         </button>
                     </div>
                 </form>

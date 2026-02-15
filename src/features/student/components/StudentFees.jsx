@@ -1,11 +1,30 @@
-import { Wallet, CheckCircle, Clock, AlertCircle, History, ChevronRight, CreditCard } from "lucide-react";
+import { useState } from "react";
+import { Wallet, CheckCircle, Clock, AlertCircle, History, ChevronRight, CreditCard, ChevronLeft } from "lucide-react";
 
 function StudentFees({ fees = [] }) {
     const currentMonth = new Date().toLocaleString('default', { month: 'long' });
     const currentYear = new Date().getFullYear();
+
+    // Find fee ignoring case sensitivity if needed, though backend seems consistent.
+    // Assuming backend returns month names like "January", "February" etc.
     const currentFee = fees.find(f => f.month === currentMonth && f.year === currentYear);
 
-    const isPending = !currentFee || currentFee.status === 'Pending';
+    const isPending = !currentFee || (currentFee.status && currentFee.status.toLowerCase() !== 'paid');
+
+    // Pagination State
+    const [page, setPage] = useState(1);
+    const itemsPerPage = 5;
+    const totalPages = Math.ceil(fees.length / itemsPerPage);
+
+    const paginatedFees = fees.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+
+    const handleNextPage = () => {
+        if (page < totalPages) setPage(page + 1);
+    };
+
+    const handlePrevPage = () => {
+        if (page > 1) setPage(page - 1);
+    };
 
     return (
         <div className="card-modern shadow-lg border-0 h-100 overflow-hidden bg-white animate-fade-in">
@@ -29,9 +48,9 @@ function StudentFees({ fees = [] }) {
                         </div>
                     </div>
 
-                    <div className="d-flex align-items-center gap-x-2 mb-4">
+                    <div className="d-flex flex-wrap align-items-center gap-2 mb-4">
                         <div className={`px-3 py-1 rounded-pill small fw-bold ${isPending ? 'bg-warning text-white shadow-warning' : 'bg-success text-white shadow-success'}`} style={{ fontSize: '0.7rem' }}>
-                            {isPending ? 'PENDING DISBURSEMENT' : 'SETTLED & VERIFIED'}
+                            {isPending ? 'PENDING' : 'SETTLED'}
                         </div>
                         {isPending && <div className="text-warning small fw-bold" style={{ fontSize: '0.65rem' }}>DUE: 15TH {currentMonth.toUpperCase()}</div>}
                     </div>
@@ -42,62 +61,79 @@ function StudentFees({ fees = [] }) {
                 </div>
 
                 <div className="mb-4">
-                    <div className="d-flex align-items-center gap-x-2 mb-3 text-muted">
-                        <History className="w-4 h-4 flex-shrink-0" />
-                        <h6 className="small fw-bold text-uppercase mb-0 letter-spacing-1">Recent Transmissions</h6>
+                    <div className="d-flex align-items-center justify-content-between mb-3">
+                        <div className="d-flex align-items-center gap-x-2 text-muted">
+                            <History className="w-4 h-4 flex-shrink-0" />
+                            <h6 className="small fw-bold text-uppercase mb-0 letter-spacing-1">Transaction History</h6>
+                        </div>
+                        {fees.length > 0 && <span className="small text-muted">{fees.length} Records</span>}
                     </div>
-                    <div className="d-flex flex-column gap-2">
-                        {fees.slice(0, 3).map((fee, i) => (
-                            <div key={i} className="d-flex align-items-center justify-content-between p-3 rounded-3 bg-tertiary transition-all hover-bg-secondary border border-transparent hover-border-subtle" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
+
+                    <div className="d-flex flex-column gap-2 min-h-200">
+                        {paginatedFees.length > 0 ? (
+                            paginatedFees.map((fee, i) => (
+                                <div key={i} className="d-flex align-items-center justify-content-between p-3 rounded-3 bg-tertiary transition-all hover-bg-secondary border border-transparent hover-border-subtle" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
+                                    <div className="d-flex align-items-center gap-x-3">
+                                        <div className="p-2 bg-white rounded-circle text-primary shadow-sm d-flex align-items-center justify-content-center">
+                                            <CreditCard className="w-3.5 h-3.5 flex-shrink-0" />
+                                        </div>
+                                        <div>
+                                            <div className="small fw-bold text-secondary">{fee.month} {fee.year}</div>
+                                            <div className="text-muted" style={{ fontSize: '0.7rem' }}>Amount: ₹{fee.amount}</div>
+                                        </div>
+                                    </div>
+                                    <div className={`d-flex align-items-center gap-x-1 small fw-bold ${fee.status === 'Paid' ? 'text-success' : 'text-danger'}`}>
+                                        {fee.status === 'Paid' ? <CheckCircle className="w-3.5 h-3.5 flex-shrink-0" /> : <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />}
+                                        <span style={{ fontSize: '0.7rem' }}>{fee.status?.toUpperCase()}</span>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="text-center py-4 text-muted small">No transaction records found.</div>
+                        )}
+
+                        {/* Mock Empty State for visual balance if needed when really 0 records */}
+                        {!fees.length && (
+                            <div className="d-flex align-items-center justify-content-between p-3 rounded-3 bg-tertiary opacity-50" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
                                 <div className="d-flex align-items-center gap-x-3">
                                     <div className="p-2 bg-white rounded-circle text-primary shadow-sm d-flex align-items-center justify-content-center">
                                         <CreditCard className="w-3.5 h-3.5 flex-shrink-0" />
                                     </div>
-                                    <span className="small fw-bold text-secondary">{fee.month} {fee.year}</span>
-                                </div>
-                                <div className={`d-flex align-items-center gap-x-1 small fw-bold ${fee.status === 'Paid' ? 'text-success' : 'text-danger'}`}>
-                                    {fee.status === 'Paid' ? <CheckCircle className="w-3.5 h-3.5 flex-shrink-0" /> : <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />}
-                                    <span>{fee.status?.toUpperCase()}</span>
+                                    <span className="small fw-bold text-muted">No History Available</span>
                                 </div>
                             </div>
-                        ))}
-                        {/* Mock data if needed */}
-                        {!fees.length && (
-                            <>
-                                <div className="d-flex align-items-center justify-content-between p-3 rounded-3 bg-tertiary" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
-                                    <div className="d-flex align-items-center gap-x-3">
-                                        <div className="p-2 bg-white rounded-circle text-primary shadow-sm opacity-50 d-flex align-items-center justify-content-center">
-                                            <CreditCard className="w-3.5 h-3.5 flex-shrink-0" />
-                                        </div>
-                                        <span className="small fw-bold text-muted">February 2025</span>
-                                    </div>
-                                    <div className="d-flex align-items-center gap-x-1 small fw-bold text-success opacity-50">
-                                        <CheckCircle className="w-3.5 h-3.5 flex-shrink-0" />
-                                        <span>SETTLED</span>
-                                    </div>
-                                </div>
-                                <div className="d-flex align-items-center justify-content-between p-3 rounded-3 bg-tertiary" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
-                                    <div className="d-flex align-items-center gap-x-3">
-                                        <div className="p-2 bg-white rounded-circle text-primary shadow-sm opacity-50 d-flex align-items-center justify-content-center">
-                                            <CreditCard className="w-3.5 h-3.5 flex-shrink-0" />
-                                        </div>
-                                        <span className="small fw-bold text-muted">January 2025</span>
-                                    </div>
-                                    <div className="d-flex align-items-center gap-x-1 small fw-bold text-success opacity-50">
-                                        <CheckCircle className="w-3.5 h-3.5 flex-shrink-0" />
-                                        <span>SETTLED</span>
-                                    </div>
-                                </div>
-                            </>
                         )}
                     </div>
                 </div>
 
-                <div className="mt-auto">
-                    <button className="btn btn-link w-100 text-decoration-none text-muted small fw-bold d-flex align-items-center justify-content-center gap-x-2 hover-text-primary transition-all">
-                        <span>Retrieve Full Financial Ledger</span>
-                        <ChevronRight className="w-3.5 h-3.5 flex-shrink-0" />
-                    </button>
+                {/* Pagination & Full Ledger Button */}
+                <div className="mt-auto pt-3 border-top">
+                    {fees.length > itemsPerPage ? (
+                        <div className="d-flex align-items-center justify-content-between mb-3">
+                            <button
+                                className="btn btn-sm btn-icon border rounded-circle"
+                                onClick={handlePrevPage}
+                                disabled={page === 1}
+                            >
+                                <ChevronLeft className="w-4 h-4" />
+                            </button>
+                            <span className="small fw-bold text-muted">Page {page} of {totalPages}</span>
+                            <button
+                                className="btn btn-sm btn-icon border rounded-circle"
+                                onClick={handleNextPage}
+                                disabled={page === totalPages}
+                            >
+                                <ChevronRight className="w-4 h-4" />
+                            </button>
+                        </div>
+                    ) : null}
+
+                    {fees.length > itemsPerPage && (
+                        <button className="btn btn-link w-100 text-decoration-none text-muted small fw-bold d-flex align-items-center justify-content-center gap-x-2 hover-text-primary transition-all">
+                            <span>Retrieve Full Financial Ledger</span>
+                            <ChevronRight className="w-3.5 h-3.5 flex-shrink-0" />
+                        </button>
+                    )}
                 </div>
             </div>
 

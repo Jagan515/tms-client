@@ -1,10 +1,13 @@
-import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import ProtectedRoute from '../components/common/ProtectedRoute';
 
 // Pages
 import Login from '../features/auth/pages/Login';
 import ForgotPassword from '../features/auth/pages/ForgotPassword';
 import ResetPassword from '../features/auth/pages/ResetPassword';
+import StudentResetPassword from '../features/auth/pages/StudentResetPassword';
 
 // Developer Portal
 import DeveloperDashboard from '../features/developer/pages/DeveloperDashboard';
@@ -21,7 +24,6 @@ import Announcements from '../features/teacher/pages/Announcements';
 import StudentManagement from '../features/teacher/pages/StudentManagement';
 import BatchManagement from '../features/teacher/pages/BatchManagement';
 import Settings from '../features/teacher/pages/Settings';
-import Messages from '../features/teacher/pages/Messages';
 
 // Student Portal
 import StudentDashboard from '../features/student/pages/StudentDashboard';
@@ -35,12 +37,37 @@ import TopNavbar from '../components/layout/TopNavbar';
 import Sidebar from '../components/layout/Sidebar';
 
 const MainLayout = () => {
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const location = useLocation();
+    const { user } = useSelector((state) => state.auth);
+
+    // Close sidebar on navigation (mobile)
+    useEffect(() => {
+        setIsSidebarOpen(false);
+    }, [location.pathname]);
+
+    // Apply Role-Based Theme Attribute
+    useEffect(() => {
+        if (user?.role) {
+            document.documentElement.setAttribute('data-user-role', user.role.toLowerCase());
+        } else {
+            document.documentElement.removeAttribute('data-user-role');
+        }
+    }, [user?.role]);
+
     return (
         <div className="d-flex vh-100 overflow-hidden">
-            <Sidebar />
+            <Sidebar mobileOpen={isSidebarOpen} />
+
+            {/* Mobile Overlay */}
+            <div
+                className={`sidebar-overlay ${isSidebarOpen ? 'show' : ''}`}
+                onClick={() => setIsSidebarOpen(false)}
+            />
+
             <div className="flex-grow-1 d-flex flex-column overflow-hidden">
-                <TopNavbar />
-                <main className="flex-grow-1 overflow-auto bg-light p-4">
+                <TopNavbar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+                <main className="flex-grow-1 overflow-auto bg-light">
                     <Outlet />
                 </main>
             </div>
@@ -55,6 +82,7 @@ const AppRoutes = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route path="/student/reset-password" element={<StudentResetPassword />} />
 
             {/* Protected Routes */}
             <Route element={<MainLayout />}>
@@ -121,11 +149,7 @@ const AppRoutes = () => {
                         <Settings />
                     </ProtectedRoute>
                 } />
-                <Route path="/teacher/messages" element={
-                    <ProtectedRoute allowedRoles={['teacher']}>
-                        <Messages />
-                    </ProtectedRoute>
-                } />
+
 
 
                 {/* Student Routes */}

@@ -1,18 +1,19 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../features/auth/redux/authSlice";
-import { Sun, Moon, LogOut, Bell, User, Search, Settings, HelpCircle, ShieldCheck, Mail, Check } from "lucide-react";
+import { Sun, Moon, LogOut, Bell, User, Search, Settings, HelpCircle, ShieldCheck, Check, Menu, Monitor } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
 import { useState, useEffect } from "react";
 import notificationService from "../../features/common/api/notificationService";
 
-function TopNavbar() {
+function TopNavbar({ onToggleSidebar }) {
     const { user, role } = useSelector((state) => state.auth);
     const { theme, toggleTheme } = useTheme();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [notifications, setNotifications] = useState([]);
     const [unreadCount, setUnreadCount] = useState(0);
+    const [searchQuery, setSearchQuery] = useState("");
     const [showNotifications, setShowNotifications] = useState(false);
 
     useEffect(() => {
@@ -49,9 +50,47 @@ function TopNavbar() {
         }
     };
 
+    const handleSearch = (e) => {
+        if (e.key === 'Enter' && searchQuery.trim()) {
+            console.log("Global Search Initiated:", searchQuery);
+            // In a real app, this would redirect to a search results page
+            // For now, we'll navigate to a relevant module based on search terms
+            const query = searchQuery.toLowerCase();
+            if (query.includes('student') || query.includes('scholar')) navigate(`/${role}/students`);
+            else if (query.includes('teacher') || query.includes('faculty')) navigate(`/developer/teachers`);
+            else if (query.includes('attendance')) navigate(`/${role}/attendance`);
+            else if (query.includes('fee')) navigate(`/${role}/fees`);
+            else if (query.includes('mark') || query.includes('grade')) navigate(`/${role}/marks`);
+            else {
+                // Default search logic
+            }
+            setSearchQuery("");
+        }
+    };
+
+    const getThemeIcon = () => {
+        if (theme === 'light') return <Sun className="w-4 h-4 text-warning" />;
+        if (theme === 'dark') return <Moon className="w-4 h-4 text-primary" />;
+        return <Monitor className="w-4 h-4 text-secondary" />;
+    };
+
+    const getThemeLabel = () => {
+        if (theme === 'light') return 'Light Mode';
+        if (theme === 'dark') return 'Dark Mode';
+        return 'System Preference';
+    };
+
     return (
         <nav className="navbar-modern sticky-top px-4 py-0 border-bottom shadow-sm">
             <div className="container-fluid h-100 d-flex justify-content-between align-items-center">
+
+                {/* Mobile Menu Toggle */}
+                <button
+                    className="btn btn-icon d-lg-none me-2 hover-bg-tertiary rounded-3"
+                    onClick={onToggleSidebar}
+                >
+                    <Menu className="w-5 h-5 text-secondary" />
+                </button>
 
                 {/* Intelligent Search Terminal */}
                 <div className="d-none d-lg-flex align-items-center position-relative w-400">
@@ -60,7 +99,10 @@ function TopNavbar() {
                         type="text"
                         className="form-control ps-5 border-0 rounded-3 shadow-none transition-all focus-ring"
                         placeholder="Search institutional modules, scholars, or records..."
-                        style={{ height: '44px', fontSize: '0.85rem', backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
+                        style={{ height: '44px', fontSize: '0.8rem', backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onKeyDown={handleSearch}
                     />
                     <div className="position-absolute end-0 me-2 d-none d-xl-flex gap-1">
                         <kbd className="border text-muted small px-1.5 rounded shadow-sm" style={{ fontSize: '0.65rem', backgroundColor: 'var(--surface-elevated)', borderColor: 'var(--border-default)' }}>⌘</kbd>
@@ -71,20 +113,16 @@ function TopNavbar() {
                 <div className="d-flex align-items-center gap-2">
                     {/* Command Center Tools */}
                     <div className="d-flex align-items-center p-1 rounded-pill me-2 d-none d-md-flex" style={{ backgroundColor: 'var(--bg-secondary)' }}>
+
                         <button
                             className="btn btn-icon p-2 rounded-circle hover-bg-tertiary transition-all"
                             onClick={toggleTheme}
-                            title={`Switch theme (Currently: ${theme})`}
+                            title={`Current: ${getThemeLabel()}`}
                         >
-                            {theme === 'light' && <Sun className="w-4 h-4 text-warning flex-shrink-0 transition-all scale-in" />}
-                            {theme === 'dark' && <Moon className="w-4 h-4 text-secondary flex-shrink-0 transition-all scale-in" />}
-                            {theme === 'system' && <Monitor className="w-4 h-4 text-primary opacity-75 flex-shrink-0 transition-all scale-in" />}
+                            {getThemeIcon()}
                         </button>
 
-                        <button className="btn btn-icon p-2 rounded-circle hover-bg-tertiary transition-all position-relative">
-                            <Mail className="w-4 h-4 text-secondary flex-shrink-0" />
-                            <span className="position-absolute top-1 end-1 p-1 bg-primary border-2 rounded-circle" style={{ borderColor: 'var(--bg-secondary)' }}></span>
-                        </button>
+                        <div className="vr mx-1 opacity-10" style={{ height: '20px' }}></div>
 
                         <div className="dropdown">
                             <button
@@ -179,7 +217,7 @@ function TopNavbar() {
                             <li><hr className="dropdown-divider opacity-10" /></li>
 
                             <li>
-                                <button className="dropdown-item rounded-3 py-2.5 d-flex align-items-center gap-x-3 transition-all">
+                                <button className="dropdown-item rounded-3 py-2.5 d-flex align-items-center gap-x-3 transition-all" onClick={() => navigate(`/${role}/dashboard`)}>
                                     <User className="w-4 h-4 text-primary opacity-50 flex-shrink-0" />
                                     <div className="flex-grow-1">
                                         <div className="fw-bold small">Institutional Profile</div>
@@ -197,7 +235,7 @@ function TopNavbar() {
                                 </button>
                             </li>
                             <li>
-                                <button className="dropdown-item rounded-3 py-2.5 d-flex align-items-center gap-x-3 transition-all">
+                                <button className="dropdown-item rounded-3 py-2.5 d-flex align-items-center gap-x-3 transition-all" onClick={() => alert("Assistance Hub: Documentation and Support portal coming soon.")}>
                                     <HelpCircle className="w-4 h-4 text-primary opacity-50 flex-shrink-0" />
                                     <div className="flex-grow-1">
                                         <div className="fw-bold small">Assistance Hub</div>

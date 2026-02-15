@@ -29,7 +29,7 @@ function StudentProfile({ student }) {
                             </div>
                             <div>
                                 <small className="text-muted d-block fw-bold text-uppercase letter-spacing-1 mb-1" style={{ fontSize: '0.6rem' }}>Registration ID</small>
-                                <strong className="text-secondary">{student.regNo}</strong>
+                                <strong className="text-secondary">{student.registrationNumber || student.regNo || 'N/A'}</strong>
                             </div>
                         </div>
                     </div>

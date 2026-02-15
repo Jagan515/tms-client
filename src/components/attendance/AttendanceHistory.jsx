@@ -28,9 +28,16 @@ function AttendanceHistory({ history = [], onEdit }) {
                     {history.map((record, index) => (
                         <tr key={index}>
                             <td className="ps-4">
-                                <div className="d-flex align-items-center gap-2">
-                                    <Calendar size={14} className="text-primary opacity-50" />
-                                    <span className="fw-semibold small">{new Date(record.date).toLocaleDateString(undefined, { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' })}</span>
+                                <div className="d-flex flex-column">
+                                    <div className="d-flex align-items-center gap-2">
+                                        <Calendar size={14} className="text-primary opacity-50" />
+                                        <span className="fw-semibold small">{new Date(record.date).toLocaleDateString(undefined, { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' })}</span>
+                                    </div>
+                                    {record.batchName && (
+                                        <small className="text-muted fw-bold mt-1 text-uppercase-caps" style={{ fontSize: '0.6rem' }}>
+                                            {record.batchName}
+                                        </small>
+                                    )}
                                 </div>
                             </td>
                             <td className="text-center">

@@ -128,12 +128,9 @@ function Fees() {
                         subtitle="Integrated revenue management and arrears tracking"
                     />
                     <div className="d-flex gap-2">
-                        <button className="btn btn-outline-primary rounded-pill px-4 d-flex align-items-center gap-2 shadow-sm" onClick={handleSync}>
-                            <RefreshCcw size={18} />
-                            <span>Sync {viewMode === 'registry' ? 'Registry' : viewMode === 'defaulters' ? 'Ledger' : 'History'}</span>
-                        </button>
+
                         {viewMode === 'registry' && (
-                            <button className="btn btn-primary rounded-pill px-4 d-flex align-items-center gap-2 shadow-lg" onClick={() => feeService.generateMonthly().then(() => fetchRegistry())}>
+                            <button className="btn btn-primary rounded-pill px-4 d-flex align-items-center gap-2 shadow-lg hover-lift" onClick={() => feeService.generateMonthly().then(() => fetchRegistry())}>
                                 <CreditCard size={18} />
                                 <span>Generate Fees</span>
                             </button>
@@ -147,26 +144,29 @@ function Fees() {
             {/* Navigation Tabs */}
             <div className="d-flex gap-3 mb-4 bg-tertiary p-2 rounded-4 d-inline-flex" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
                 <button
-                    className={`btn rounded-pill px-4 py-2 d-flex align-items-center gap-2 border-0 transition-all ${viewMode === 'registry' ? 'bg-white shadow-sm text-primary' : 'text-muted'}`}
-                    onClick={() => setViewMode('registry')}
+                    className={`btn rounded-pill px-4 py-2 d-flex align-items-center gap-2 border-0 transition-all hover-bg-tertiary ${viewMode === 'registry' ? 'bg-white shadow-sm text-primary' : 'text-muted'}`}
+                    onClick={() => { setViewMode('registry'); fetchRegistry(); }}
                 >
                     <Calendar size={18} />
-                    <span className="fw-bold">Monthly Registry</span>
+                    <span className="fw-bold">Collection Ledger</span>
+                    <RefreshCcw size={14} className={`ms-1 opacity-50 ${loading && viewMode === 'registry' ? 'animate-spin' : ''}`} />
                 </button>
                 <button
-                    className={`btn rounded-pill px-4 py-2 d-flex align-items-center gap-2 border-0 transition-all ${viewMode === 'defaulters' ? 'bg-white shadow-sm text-danger' : 'text-muted'}`}
-                    onClick={() => setViewMode('defaulters')}
+                    className={`btn rounded-pill px-4 py-2 d-flex align-items-center gap-2 border-0 transition-all hover-bg-tertiary ${viewMode === 'defaulters' ? 'bg-white shadow-sm text-danger' : 'text-muted'}`}
+                    onClick={() => { setViewMode('defaulters'); fetchDefaulters(); }}
                 >
                     <AlertCircle size={18} />
-                    <span className="fw-bold">Defaulters Ledger</span>
+                    <span className="fw-bold">Arrears Dashboard</span>
                     {stats.defaulterCount > 0 && <span className="badge bg-danger rounded-circle p-1" style={{ fontSize: '0.6rem' }}>{stats.defaulterCount}</span>}
+                    <RefreshCcw size={14} className={`ms-1 opacity-50 ${loading && viewMode === 'defaulters' ? 'animate-spin' : ''}`} />
                 </button>
                 <button
-                    className={`btn rounded-pill px-4 py-2 d-flex align-items-center gap-2 border-0 transition-all ${viewMode === 'history' ? 'bg-white shadow-sm text-primary' : 'text-muted'}`}
-                    onClick={() => setViewMode('history')}
+                    className={`btn rounded-pill px-4 py-2 d-flex align-items-center gap-2 border-0 transition-all hover-bg-tertiary ${viewMode === 'history' ? 'bg-white shadow-sm text-primary' : 'text-muted'}`}
+                    onClick={() => { setViewMode('history'); fetchPaymentHistory(); }}
                 >
                     <History size={18} />
-                    <span className="fw-bold">Settlement History</span>
+                    <span className="fw-bold">Transaction History</span>
+                    <RefreshCcw size={14} className={`ms-1 opacity-50 ${loading && viewMode === 'history' ? 'animate-spin' : ''}`} />
                 </button>
             </div>
 
@@ -184,7 +184,7 @@ function Fees() {
                     )}
                     <div className={viewMode === 'registry' ? "col-md-3" : "col-md-4"}>
                         <select className="form-select border-0 bg-tertiary rounded-3" value={selectedBatch} onChange={(e) => setSelectedBatch(e.target.value)}>
-                            <option value="all">📚 All Batches (Consolidated)</option>
+                            <option value="all">Consolidated Institutional Batches</option>
                             {batches.map(b => (
                                 <option key={b._id} value={b._id}>
                                     {b.name} ({b.studentCount || 0} students)

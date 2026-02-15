@@ -1,8 +1,8 @@
 import api from '../../../services/api';
 
 const notificationService = {
-    getNotifications: async () => {
-        const response = await api.get('/notifications');
+    getNotifications: async (limit = 20) => {
+        const response = await api.get(`/notifications?limit=${limit}`);
         return response.data;
     },
     markRead: async (id) => {

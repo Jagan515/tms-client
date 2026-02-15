@@ -1,15 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;700&display=swap');
 
 :root {
   --font-main: 'Inter', system-ui, -apple-system, sans-serif;
 
-  /* Accent Base Colors (Accessible) */
-  --accent-primary: #6366F1;
-  --accent-primary-rgb: 99, 102, 241;
-  --success: #10B981;
-  --danger: #EF4444;
+  /* Accent Base Colors (Accessible) - Indigo Primary */
+  --accent-primary: #4F46E5;
+  /* Indigo-600 */
+  --accent-primary-rgb: 79, 70, 229;
+  --success: #16A34A;
+  /* Green-600 */
+  --danger: #DC2626;
+  /* Red-600 */
   --warning: #F59E0B;
+  /* Amber-500 */
   --info: #3B82F6;
+  /* Blue-500 */
 
   /* Spacing Rhythm */
   --s-1: 0.25rem;
@@ -29,29 +34,42 @@
   --border-radius-lg: 16px;
   --line-height-base: 1.6;
 
-  /* Fallback aliases for institutional components */
+  /* Fallback aliases */
   --border-color: var(--border-default);
   --text-tertiary: var(--text-muted);
   --z-floating: 1050;
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
-/* Light Mode Tokens */
+/* Light Mode Tokens (Neutral Professional) */
 [data-bs-theme='light'],
 :root:not([data-bs-theme='dark']) {
-  --bg-primary: #F8FAFC;
-  --bg-secondary: #F1F5F9;
+  --bg-primary: #F9FAFB;
+  /* Soft White */
+  --bg-secondary: #F3F4F6;
+  /* Cool Gray 100 */
   --surface-card: #FFFFFF;
+  /* White */
   --surface-elevated: #FFFFFF;
-  --border-default: #E2E8F0;
+  --border-default: #E5E7EB;
+  /* Light Gray */
 
-  --text-primary: #0F172A;
-  --text-secondary: #334155;
-  --text-muted: #64748B;
+  --text-primary: #1F2937;
+  /* Dark Gray */
+  --text-secondary: #6B7280;
+  /* Muted Gray */
+  --text-muted: #9CA3AF;
+  /* Cool Gray 400 */
 
   --sidebar-bg: #FFFFFF;
-  --sidebar-border: #E2E8F0;
-  --sidebar-active-bg: #F1F5F9;
+  --sidebar-border: #E5E7EB;
+  --sidebar-active-bg: #F3F4F6;
+
+  /* Default Accents */
+  --accent-primary: #4F46E5;
+  --accent-primary-rgb: 79, 70, 229;
+  --accent-secondary: #0EA5E9;
+  /* Sky Blue default */
 
   --shadow-premium: 0 10px 40px -3px rgba(0, 0, 0, 0.04);
   --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
@@ -63,48 +81,55 @@
   --bs-body-bg: var(--bg-primary);
   --bs-body-color: var(--text-primary);
   --bs-tertiary-bg: var(--surface-card);
+  --bs-primary: var(--accent-primary);
+  --bs-primary-rgb: var(--accent-primary-rgb);
+  --bs-link-color: var(--accent-primary);
+  --bs-link-hover-color: var(--accent-secondary);
+  --bs-border-color: var(--border-default);
 }
 
-/* Dark Mode Tokens (Low Eye Strain Slate) */
+/* Dark Mode Tokens (Soft Dark - Balanced & Accessible) */
 [data-bs-theme='dark'] {
-  --bg-primary: #0F172A;
-  /* Slate 900 */
-  --bg-secondary: #0B1220;
-  /* Slate 950 base */
-  --surface-card: #1E293B;
-  /* Slate 800 */
-  --surface-elevated: #2E3A4D;
-  /* Custom Elevation */
-  --border-default: #334155;
-  /* Slate 700 */
+  --bg-primary: #111827;
+  /* Deep Gray */
+  --bg-secondary: #1F2937;
+  /* Charcoal */
+  --surface-card: #1F2937;
+  /* Charcoal */
+  --surface-elevated: #374151;
+  /* Gray 700 */
+  --border-default: #374151;
+  /* Muted Gray */
 
-  --text-primary: #F1F5F9;
-  /* Slate 100 (Off-white) */
-  --text-secondary: #94A3B8;
-  /* Slate 400 */
-  --text-muted: #64748B;
-  /* Slate 500 */
+  --text-primary: #E5E7EB;
+  /* Off White */
+  --text-secondary: #9CA3AF;
+  /* Cool Gray */
+  --text-muted: #6B7280;
+  /* Gray 500 */
 
-  /* Desaturated Accent Colors (-20% Saturation rule) */
-  --accent-primary: #94A1F2;
-  /* Desaturated Indigo-ish */
-  --success: #6EE7B7;
-  /* Desaturated Emerald */
+  /* Adjusted Accents for Dark Mode */
+  --accent-primary: #818CF8;
+  /* Light Indigo */
+  --accent-primary-rgb: 129, 140, 248;
+  --accent-secondary: #38BDF8;
+  /* Light Sky Blue */
+
+  --success: #34D399;
+  /* Soft Green */
   --danger: #F87171;
-  /* Desaturated Red */
+  /* Soft Red */
   --warning: #FBBF24;
-  /* Desaturated Amber */
-  --info: #7DD3FC;
-  /* Desaturated Sky */
+  /* Soft Amber */
 
   --sidebar-bg: #111827;
-  --sidebar-border: #1F2937;
+  --sidebar-border: #374151;
   --sidebar-active-bg: #1F2937;
 
   --shadow-premium: 0 20px 50px -12px rgba(0, 0, 0, 0.5);
   --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
 
-  --glass-bg: rgba(30, 41, 59, 0.7);
+  --glass-bg: rgba(31, 41, 55, 0.7);
   --glass-border: rgba(255, 255, 255, 0.1);
 
   /* Bootstrap Overrides */
@@ -113,6 +138,137 @@
   --bs-tertiary-bg: var(--surface-card);
   --bs-border-color: var(--border-default);
   --bs-secondary-color: var(--text-secondary);
+  --bs-primary: var(--accent-primary);
+  --bs-primary-rgb: var(--accent-primary-rgb);
+  --bs-link-color: var(--text-primary);
+  /* Links in dark mode usually light */
+  --bs-link-hover-color: var(--accent-primary);
+}
+
+/* =========================================
+   MASTER COLOR SYSTEM (Foundation)
+   ========================================= */
+:root {
+  --col-dark-base: #32213A;
+  /* Primary Dark Base */
+  --col-surface: #383B53;
+  /* Secondary Surface */
+  --col-utility: #66717E;
+  /* Neutral Text / Border */
+  --col-light-bg: #D4D6B9;
+  /* Light Background */
+  --col-accent: #FFA69E;
+  /* Accent / CTA */
+  --col-accent-rgb: 255, 166, 158;
+}
+
+/* =========================================
+   ROLE-BASED STRATEGY (Top 1% Execution)
+   ========================================= */
+
+/* 1. STUDENT ROLE (Engaging + Motivational) */
+:root[data-user-role='student'] {
+  --bg-primary: var(--col-light-bg);
+  --bg-secondary: #FFFFFF;
+  /* Card Background */
+  --surface-card: #FFFFFF;
+
+  --text-primary: var(--col-dark-base);
+  --text-secondary: var(--col-utility);
+  --text-muted: var(--col-utility);
+
+  --accent-primary: var(--col-accent);
+  /* #FFA69E */
+  --accent-primary-rgb: var(--col-accent-rgb);
+  --accent-secondary: var(--col-dark-base);
+
+  --sidebar-bg: var(--col-dark-base);
+  --sidebar-active-bg: var(--col-accent);
+  --sidebar-active-text: var(--col-dark-base);
+  /* Contrast on accent */
+  --sidebar-text: #FFFFFF;
+
+  --border-default: var(--col-utility);
+
+  --bs-primary: var(--col-accent);
+  --bs-primary-rgb: var(--col-accent-rgb);
+  --bs-body-bg: var(--bg-primary);
+}
+
+/* 2. PARENT ROLE (Calm + Trustworthy) */
+:root[data-user-role='parent'] {
+  --bg-primary: var(--col-light-bg);
+  --surface-card: #FFFFFF;
+  --text-primary: var(--col-dark-base);
+  --text-secondary: var(--col-utility);
+
+  --accent-primary: var(--col-utility);
+  /* #66717E */
+  --accent-primary-rgb: 102, 113, 126;
+  --accent-secondary: var(--col-surface);
+
+  --sidebar-bg: var(--col-surface);
+  /* #383B53 */
+  --sidebar-active-bg: var(--col-utility);
+  --sidebar-text: #FFFFFF;
+
+  --danger: var(--col-accent);
+
+  --bs-primary: var(--col-utility);
+  --bs-body-bg: var(--bg-primary);
+}
+
+/* 3. TEACHER ROLE (Authority + Structure) */
+:root[data-user-role='teacher'] {
+  --bg-primary: var(--col-light-bg);
+  --surface-card: #FFFFFF;
+  --text-primary: var(--col-dark-base);
+
+  --accent-primary: var(--col-surface);
+  /* #383B53 */
+  --accent-primary-rgb: 56, 59, 83;
+  --accent-secondary: var(--col-dark-base);
+
+  --sidebar-bg: var(--col-dark-base);
+  /* #32213A */
+  --sidebar-active-bg: var(--col-surface);
+  /* #383B53 */
+  --sidebar-text: #FFFFFF;
+
+  --info: var(--col-accent);
+
+  --bs-primary: var(--col-surface);
+  --bs-body-bg: var(--bg-primary);
+}
+
+/* 4. DEVELOPER ROLE (Deep + Minimal) */
+:root[data-user-role='developer'] {
+  --bg-primary: var(--col-surface);
+  /* #383B53 */
+  --bg-secondary: #2A1B32;
+  /* Nav Hover specified as shift to this? */
+  --surface-card: var(--col-dark-base);
+  /* #32213A */
+  --text-primary: #FFFFFF;
+  --text-secondary: var(--col-light-bg);
+
+  --accent-primary: var(--col-accent);
+  /* #FFA69E */
+  --accent-primary-rgb: var(--col-accent-rgb);
+  --accent-secondary: var(--col-light-bg);
+
+  --sidebar-bg: var(--col-dark-base);
+  /* #32213A */
+  --sidebar-active-bg: var(--col-accent);
+  --sidebar-active-text: var(--col-dark-base);
+  --sidebar-text: #FFFFFF;
+
+  --border-default: var(--col-utility);
+
+  --bs-primary: var(--col-accent);
+  --bs-body-bg: var(--bg-primary);
+  --bs-body-color: var(--text-primary);
+  --bs-border-color: var(--col-utility);
 }
 
 * {
@@ -651,8 +807,21 @@ button.role-card {
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
 }
 
+/* Institutional Color Balance & Global Overrides */
 .text-primary {
   color: var(--accent-primary) !important;
+}
+
+.text-success {
+  color: var(--success) !important;
+}
+
+.text-danger {
+  color: var(--danger) !important;
+}
+
+.text-warning {
+  color: var(--warning) !important;
 }
 
 .bg-primary {
@@ -679,6 +848,14 @@ button.role-card {
   background-color: var(--info) !important;
 }
 
+.bg-body {
+  background-color: var(--bg-primary) !important;
+}
+
+.bg-tertiary {
+  background-color: var(--surface-card) !important;
+}
+
 /* Theme-Aware Utility Overrides */
 [data-bs-theme='dark'] .bg-white,
 [data-bs-theme='dark'] .bg-light {
@@ -689,24 +866,15 @@ button.role-card {
   color: var(--text-primary) !important;
 }
 
+[data-bs-theme='dark'] .text-muted {
+  color: var(--text-secondary) !important;
+}
+
 [data-bs-theme='dark'] .border-white {
   border-color: var(--border-default) !important;
 }
 
-[data-bs-theme='dark'] .bg-body {
-  background-color: var(--bg-primary) !important;
-}
-
-[data-bs-theme='dark'] .bg-tertiary {
-  background-color: var(--surface-card) !important;
-}
-
-[data-bs-theme='dark'] .bg-primary-subtle {
-  background-color: rgba(148, 161, 242, 0.1) !important;
-  color: var(--accent-primary) !important;
-}
-
-/* Subtler Overrides for Dark Mode */
+/* Redefined Subtler Overrides to avoid duplication */
 [data-bs-theme='dark'] .bg-primary-subtle {
   background-color: rgba(148, 161, 242, 0.1) !important;
   color: var(--accent-primary) !important;
@@ -730,6 +898,33 @@ button.role-card {
 [data-bs-theme='dark'] .bg-info-subtle {
   background-color: rgba(125, 211, 252, 0.1) !important;
   color: var(--info) !important;
+}
+
+/* Search Bar & Input Group Visibility Fixes */
+.input-group-text {
+  background-color: var(--bg-secondary) !important;
+  border: 1px solid var(--border-default) !important;
+  color: var(--text-muted) !important;
+  transition: all var(--transition-fast) !important;
+}
+
+.input-group:focus-within .input-group-text {
+  border-color: var(--accent-primary) !important;
+  color: var(--accent-primary) !important;
+}
+
+::placeholder {
+  color: var(--text-muted) !important;
+  opacity: 0.6 !important;
+}
+
+/* Visibility fix for icons and texts in settings/dashboards */
+.text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+.hover-bg-tertiary:hover {
+  background-color: var(--surface-elevated) !important;
 }
 
 /* Z-Index Consistency */
@@ -927,4 +1122,83 @@ button.role-card {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--bs-secondary-color);
+}
+
+/* Mobile Drawer System */
+@media (max-width: 991.98px) {
+  .sidebar-modern {
+    position: fixed !important;
+    left: -280px;
+    top: 0;
+    bottom: 0;
+    z-index: 1080 !important;
+    width: 280px !important;
+    box-shadow: 20px 0 50px rgba(0, 0, 0, 0.2) !important;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    visibility: hidden;
+  }
+
+  .sidebar-modern.mobile-open {
+    left: 0 !important;
+    visibility: visible;
+  }
+
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 1070;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .sidebar-overlay.show {
+    display: block;
+    opacity: 1;
+  }
+
+  /* Adjust main content padding on mobile */
+  main {
+    padding: 1rem !important;
+  }
+
+  .navbar-modern {
+    padding: 0 1rem !important;
+  }
+}
+
+/* Scrollbar Hide Utility */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Responsive Table Wrappers */
+.table-responsive-modern {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Improved Touch Targets for Mobile */
+@media (max-width: 576px) {
+  .btn {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .input-group,
+  .form-control {
+    min-height: 48px;
+  }
 }

@@ -30,11 +30,11 @@ function PaymentHistory({ history = [] }) {
                 <table className="table table-hover align-middle mb-0">
                     <thead className="table-light">
                         <tr>
-                            <th className="ps-4">Student Candidate</th>
-                            <th className="text-center">Total Amount</th>
-                            <th className="text-center">Channel</th>
-                            <th className="text-center">Settlement Date</th>
-                            <th className="text-end pe-4">Receipt Reference</th>
+                            <th className="ps-4">Scholar Identity</th>
+                            <th className="text-center">Transacted Value</th>
+                            <th className="text-center">Payment Gateway</th>
+                            <th className="text-center">Transmission Date</th>
+                            <th className="text-end pe-4">Audit Metadata</th>
                         </tr>
                     </thead>
                     <tbody>

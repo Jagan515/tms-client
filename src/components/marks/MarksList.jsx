@@ -19,9 +19,9 @@ function MarksList({ marks = [] }) {
                     {marks.map((mark, index) => {
                         const percentage = Math.round((mark.marksObtained / mark.totalMarks) * 100);
                         return (
-                            <tr key={index}>
-                                <td className="small">{new Date(mark.createdAt).toLocaleDateString()}</td>
-                                <td className="fw-bold">{mark.examName}</td>
+                            <tr key={mark._id || index}>
+                                <td className="small">{new Date(mark.examDate || mark.createdAt).toLocaleDateString()}</td>
+                                <td className="fw-bold">{mark.unitName}</td>
                                 <td>{mark.subject}</td>
                                 <td>{mark.marksObtained}/{mark.totalMarks}</td>
                                 <td>

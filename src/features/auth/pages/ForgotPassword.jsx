@@ -28,6 +28,28 @@ const ForgotPassword = () => {
     };
 
     if (success) {
+        if (role === 'student') {
+            return (
+                <div className="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-body p-0 overflow-hidden">
+                    <div className="position-absolute top-0 start-50 translate-middle-x rounded-circle opacity-25"
+                        style={{ width: '600px', height: '600px', background: 'radial-gradient(circle, var(--bs-primary) 0%, transparent 70%)', filter: 'blur(100px)', zIndex: 0 }}></div>
+
+                    <div className="card rounded-4 shadow-premium border-0 p-5 text-center animate-scale-in position-relative" style={{ maxWidth: '480px', width: '100%', zIndex: 1 }}>
+                        <div className="d-inline-flex p-3 rounded-circle bg-warning shadow-lg mb-4 text-white mx-auto">
+                            <ShieldCheck size={32} />
+                        </div>
+                        <h2 className="fw-bold mb-3 tracking-tight">Authorization Pending</h2>
+                        <p className="text-muted mb-4 px-3">
+                            A secure One-Time Password (OTP) has been dispatched to your Faculty Advisor for verification.
+                        </p>
+                        <button onClick={() => navigate('/student/reset-password', { state: { registrationNumber: identifier } })} className="btn btn-premium w-100 rounded-3 py-3 fw-bold shadow-sm">
+                            Enter Secured OTP
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
         return (
             <div className="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-body p-0 overflow-hidden">
                 <div className="position-absolute top-0 start-50 translate-middle-x rounded-circle opacity-25"
@@ -81,7 +103,7 @@ const ForgotPassword = () => {
                                 <div className="mb-4 text-center">
                                     <label className="form-label small fw-bold text-muted text-uppercase tracking-wider mb-3 d-block">Infrastructure Role</label>
                                     <div className="d-flex gap-2">
-                                        {['teacher', 'parent', 'developer'].map((r) => (
+                                        {['student', 'teacher', 'parent', 'developer'].map((r) => (
                                             <button
                                                 key={r}
                                                 type="button"
@@ -93,20 +115,20 @@ const ForgotPassword = () => {
                                         ))}
                                     </div>
                                     <div className="form-text small mt-3 bg-tertiary-subtle p-2 rounded-2 text-muted">
-                                        Student resets must be authorized via Academic Control.
+                                        {role === 'student' ? 'Reset authorization requires faculty approval.' : 'Institutional identity verification required.'}
                                     </div>
                                 </div>
 
                                 <div className="mb-4">
-                                    <label className="form-label small fw-bold text-muted mb-2">Registered Email Identity</label>
+                                    <label className="form-label small fw-bold text-muted mb-2">{role === 'student' ? 'Registration Identity' : 'Registered Email Identity'}</label>
                                     <div className="input-group">
                                         <span className="input-group-text bg-transparent border-end-0 text-muted ps-3">
                                             <Mail size={18} />
                                         </span>
                                         <input
-                                            type="email"
+                                            type={role === 'student' ? 'text' : 'email'}
                                             className="form-control form-control-lg border-start-0 ps-0"
-                                            placeholder="identity@tms.edu"
+                                            placeholder={role === 'student' ? 'e.g. REG-2024-001' : 'identity@tms.edu'}
                                             value={identifier}
                                             onChange={(e) => setIdentifier(e.target.value)}
                                             required

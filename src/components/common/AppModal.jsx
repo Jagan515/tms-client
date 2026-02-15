@@ -1,6 +1,6 @@
 import { X } from "lucide-react";
 
-function AppModal({ show, title, children, onClose, size = "" }) {
+function AppModal({ show, title, children, onClose, size = "", width }) {
 
     if (!show) return null;
 
@@ -20,19 +20,22 @@ function AppModal({ show, title, children, onClose, size = "" }) {
             onClick={onClose}
         >
             <div
-                className={`modal-content-modern card-modern shadow-2xl animate-scale-in ${size}`}
+                className={`modal-content-modern card-modern shadow-2xl animate-scale-in border-0 ${size}`}
                 style={{
-                    maxWidth: size === "lg" ? "800px" : size === "sm" ? "400px" : "500px",
+                    maxWidth: width || (size === "lg" ? "800px" : size === "sm" ? "400px" : "500px"),
                     width: "100%",
-                    maxHeight: "90vh",
-                    overflow: "auto",
-                    padding: 0
+                    maxHeight: "95vh",
+                    display: "flex",
+                    flexDirection: "column",
+                    overflow: "hidden",
+                    padding: 0,
+                    backgroundColor: 'var(--surface-card)'
                 }}
                 onClick={(e) => e.stopPropagation()}
             >
-                {/* Modern Header */}
-                <div className="p-4 border-bottom d-flex justify-content-between align-items-center" style={{ backgroundColor: 'var(--bg-secondary)', borderBottomColor: 'var(--border-default) !important' }}>
-                    <h5 className="modal-title fw-bold m-0" style={{ color: "var(--text-primary)" }}>
+                {/* Modern Header - Fixed */}
+                <div className="p-4 border-bottom d-flex justify-content-between align-items-center flex-shrink-0" style={{ backgroundColor: 'var(--bg-secondary)', borderBottomColor: 'var(--border-default) !important' }}>
+                    <h5 className="modal-title fw-bold m-0 tracking-tight" style={{ color: "var(--text-primary)" }}>
                         {title}
                     </h5>
                     <button
@@ -44,8 +47,8 @@ function AppModal({ show, title, children, onClose, size = "" }) {
                     </button>
                 </div>
 
-                {/* Body with padding */}
-                <div className="p-4">
+                {/* Content Area - Children manage their own scrolling */}
+                <div className="flex-grow-1 overflow-hidden d-flex flex-column" style={{ minHeight: 0 }}>
                     {children}
                 </div>
             </div>

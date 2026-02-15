@@ -32,6 +32,10 @@ const authService = {
     verifyEmailChange: async (token) => {
         const response = await api.put(`/auth/verify-email/${token}`);
         return response.data;
+    },
+    resetPasswordStudent: async (registrationNumber, otp, newPassword) => {
+        const response = await api.post('/auth/student/reset-password', { registrationNumber, otp, newPassword });
+        return response.data;
     }
 };
 

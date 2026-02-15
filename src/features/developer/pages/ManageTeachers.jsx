@@ -184,7 +184,7 @@ function ManageTeachers() {
                             <Search className="position-absolute top-50 translate-middle-y ms-3 text-primary opacity-50" size={18} />
                             <input
                                 type="text"
-                                className="form-control ps-5 rounded-pill bg-white border-0 shadow-sm"
+                                className="form-control ps-5 rounded-pill shadow-sm"
                                 placeholder="Filter instructors..."
                                 style={{ width: '320px', height: '44px', fontSize: '0.9rem' }}
                                 value={searchTerm}

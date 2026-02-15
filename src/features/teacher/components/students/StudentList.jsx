@@ -21,7 +21,6 @@ function StudentList({ students, onEdit, onDelete, onView }) {
                         <th className="ps-4 py-3">Scholar Profile</th>
                         <th>Classification</th>
                         <th>Institutional Batch</th>
-                        <th className="text-center">Financial Status</th>
                         <th className="text-end pe-4">Lifecycle Actions</th>
                     </tr>
                 </thead>
@@ -38,6 +37,9 @@ function StudentList({ students, onEdit, onDelete, onView }) {
                                         <div className="d-flex align-items-center gap-1 text-muted" style={{ fontSize: '0.7rem' }}>
                                             <Hash size={10} />
                                             <span>{student.registrationNumber || 'VERIFICATION_PENDING'}</span>
+                                            <span className="mx-1">•</span>
+                                            <User size={10} />
+                                            <span>{student.parentName}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -53,12 +55,6 @@ function StudentList({ students, onEdit, onDelete, onView }) {
                                 <div className="d-flex align-items-center gap-2 text-secondary small fw-medium">
                                     <Briefcase size={14} className="opacity-50" />
                                     <span>{student.batchName || 'Unassigned'}</span>
-                                </div>
-                            </td>
-                            <td className="text-center">
-                                <div className={`d-inline-flex align-items-center gap-1 px-3 py-1 rounded-pill small fw-bold ${student.feeStatus === 'Paid' ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning'}`} style={{ fontSize: '0.65rem' }}>
-                                    {student.feeStatus === 'Paid' ? <BadgeCheck size={12} /> : <AlertCircle size={12} />}
-                                    <span>{student.feeStatus?.toUpperCase() || 'UNKNOWN'}</span>
                                 </div>
                             </td>
                             <td className="text-end pe-4">

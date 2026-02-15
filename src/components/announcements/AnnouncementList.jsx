@@ -32,7 +32,7 @@ function AnnouncementList({ announcements = [], onDelete }) {
                         </div>
                     </div>
 
-                    <p className="mb-3 small text-secondary" style={{ lineHeight: '1.5' }}>{item.message}</p>
+                    <p className="mb-3 small text-secondary" style={{ lineHeight: '1.5' }}>{item.content || item.message}</p>
 
                     <div className="d-flex justify-content-between align-items-center">
                         <div className="d-flex align-items-center gap-x-2">

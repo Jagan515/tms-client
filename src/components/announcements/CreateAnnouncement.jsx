@@ -5,8 +5,8 @@ import FormInput from "../common/FormInput";
 function CreateAnnouncement({ onSubmit, onCancel, loading }) {
     const [formData, setFormData] = useState({
         title: "",
-        message: "",
-        targetRole: "both"
+        content: "",
+        targetAudience: "all"
     });
 
     const handleChange = (e) => {
@@ -45,15 +45,15 @@ function CreateAnnouncement({ onSubmit, onCancel, loading }) {
                     <Layout className="position-absolute top-0 mt-3 ms-3 text-muted opacity-50" size={18} />
                     <textarea
                         className="form-control ps-5 py-3 rounded-3 border-secondary-subtle bg-tertiary-hover transition-all"
-                        name="message"
+                        name="content"
                         rows="5"
                         placeholder="Compose your institutional message here..."
-                        value={formData.message}
+                        value={formData.content}
                         onChange={handleChange}
                         required
                         style={{
                             backgroundColor: 'var(--bg-tertiary)',
-                            borderColor: 'var(--border-color)',
+                            borderColor: 'var(--border-default)',
                             color: 'var(--text-primary)',
                             fontSize: '0.9rem'
                         }}
@@ -67,19 +67,19 @@ function CreateAnnouncement({ onSubmit, onCancel, loading }) {
                     <Users className="position-absolute top-50 translate-middle-y ms-3 text-primary opacity-50" size={18} />
                     <select
                         className="form-select ps-5 py-2.5 rounded-3 border-secondary-subtle bg-tertiary-hover transition-all"
-                        name="targetRole"
-                        value={formData.targetRole}
+                        name="targetAudience"
+                        value={formData.targetAudience}
                         onChange={handleChange}
                         style={{
                             backgroundColor: 'var(--bg-tertiary)',
-                            borderColor: 'var(--border-color)',
+                            borderColor: 'var(--border-default)',
                             color: 'var(--text-primary)',
                             fontSize: '0.9rem'
                         }}
                     >
-                        <option value="both">Consolidated (Students & Guardians)</option>
-                        <option value="student">Scholars Only</option>
-                        <option value="parent">Guardians Only</option>
+                        <option value="all">Consolidated (Students & Guardians)</option>
+                        <option value="students">Scholars Only</option>
+                        <option value="parents">Guardians Only</option>
                     </select>
                 </div>
             </div>

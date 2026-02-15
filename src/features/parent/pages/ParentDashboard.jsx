@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { serverEndpoint } from "../../../config/appConfig";
 import PageHeader from "../../../components/common/PageHeader";
@@ -31,7 +32,9 @@ function ParentDashboard() {
     const [dashboardData, setDashboardData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [apiError, setApiError] = useState(null);
-    const [activeTab, setActiveTab] = useState("overview");
+    const location = useLocation();
+    const query = new URLSearchParams(location.search);
+    const activeTab = query.get('tab') || 'overview';
 
     const fetchChildren = async () => {
         setApiError(null);
@@ -77,6 +80,10 @@ function ParentDashboard() {
             fetchChildDashboard(selectedChildId);
         }
     }, [selectedChildId]);
+
+    // Re-fetch dashboard when tab changes if needed, or simply render different view
+    // Since dashboardData contains everything, we don't need to refetch on tab change unless data is segmented.
+    // The current backend sends everything.
 
     if (loading && !dashboardData && !apiError) return <Loading text="Synchronizing ward data..." />;
 
@@ -163,25 +170,43 @@ function ParentDashboard() {
                 return <div className="animate-fade-in"><StudentMarks schoolMarks={dashboardData.marks.school} tuitionMarks={dashboardData.marks.tuition} hideSubmit={true} /></div>;
             case "fees":
                 return <div className="animate-fade-in"><StudentFees fees={dashboardData.fees.history} /></div>;
+            case "notices":
+                return (
+                    <div className="animate-fade-in">
+                        <div className="d-flex align-items-center gap-x-2 mb-4">
+                            <Megaphone className="w-5 h-5 text-primary flex-shrink-0" />
+                            <h5 className="fw-bold mb-0">Notice Board</h5>
+                        </div>
+                        <AnnouncementList announcements={dashboardData.announcements} />
+                    </div>
+                );
             default:
                 return null;
         }
     };
 
     return (
-        <div className="p-6 animate-fade-in bg-premium-gradient" style={{ minHeight: '100vh', padding: 'var(--s-6)' }}>
-            <div className="d-flex flex-column flex-xl-row justify-content-between align-items-xl-center mb-8 gap-4" style={{ marginBottom: 'var(--s-8)' }}>
-                <PageHeader
-                    title="Guardian Intelligence"
-                    subtitle={`Monitoring growth and performance for ${selectedChild?.name || 'Authorized Ward'}`}
-                />
+        <div className="p-4 p-xl-5 pb-5 mb-5 mb-lg-0 animate-fade-in">
+            {/* Header Section */}
+            <header className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-5">
+                <div>
+                    <h2 className="fw-bold text-dark mb-1">
+                        {activeTab === 'overview' ? 'Dashboard Overview' :
+                            activeTab === 'attendance' ? 'Attendance Records' :
+                                activeTab === 'marks' ? 'Academic Performance' :
+                                    activeTab === 'fees' ? 'Financial Context' :
+                                        activeTab === 'notices' ? 'Notice Board' : 'Settings'}
+                    </h2>
+                    <p className="text-muted small mb-0">Managing portfolio for <span className="fw-bold text-primary">{selectedChild?.name || 'your ward'}</span></p>
+                </div>
 
+                {/* Child Selector */}
                 {activeTab !== 'settings' && (
-                    <div className="floating-selector d-flex align-items-center gap-3 p-2 bg-body rounded-pill border shadow-sm">
-                        <div className="icon-box bg-primary text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm" style={{ width: '40px', height: '40px' }}>
-                            <Baby className="w-5 h-5 flex-shrink-0" />
+                    <div className="bg-white p-1.5 rounded-pill border shadow-sm d-inline-flex align-items-center gap-2">
+                        <div className="bg-primary-subtle p-2 rounded-circle text-primary">
+                            <Baby size={18} />
                         </div>
-                        <div className="me-2">
+                        <div className="pe-2">
                             <ParentChildSelector
                                 children={children}
                                 selectedChildId={selectedChildId}
@@ -190,32 +215,10 @@ function ParentDashboard() {
                         </div>
                     </div>
                 )}
-            </div>
+            </header>
 
-            {/* Navigation Tabs */}
-            <div className="nav-container mb-10 p-1 bg-secondary rounded-4 d-inline-flex flex-wrap gap-1 shadow-sm" style={{ marginBottom: 'var(--s-10)' }}>
-                {[
-                    { id: 'overview', label: 'Overview', icon: LayoutDashboard },
-                    { id: 'attendance', label: 'Attendance', icon: CalendarCheck },
-                    { id: 'marks', label: 'Evaluation', icon: Trophy },
-                    { id: 'fees', label: 'Financials', icon: Wallet },
-                    { id: 'settings', label: 'Preferences', icon: Settings },
-                ].map(tab => (
-                    <button
-                        key={tab.id}
-                        className={`btn px-4 py-2.5 rounded-4 d-flex align-items-center gap-x-2 transition-all border-0 ${activeTab === tab.id
-                            ? 'bg-white shadow-sm text-primary fw-bold'
-                            : 'text-secondary opacity-75'
-                            }`}
-                        onClick={() => setActiveTab(tab.id)}
-                    >
-                        <tab.icon className="w-4.5 h-4.5 flex-shrink-0" />
-                        <span className="small text-capitalize">{tab.label}</span>
-                    </button>
-                ))}
-            </div>
-
-            <div className="tab-render-area" style={{ minHeight: '500px' }}>
+            {/* Content Area */}
+            <div className="animate-fade-in fade-in-up">
                 {renderContent()}
             </div>
         </div>

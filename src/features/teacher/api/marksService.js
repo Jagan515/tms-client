@@ -18,6 +18,10 @@ const marksService = {
         const response = await api.patch(`/marks/${id}/reject`, { reason });
         return response.data;
     },
+    rejectBulk: async (ids, reason) => {
+        const response = await api.patch('/marks/reject-bulk', { ids, reason });
+        return response.data;
+    },
     editApproveMark: async (id, data) => {
         const response = await api.patch(`/marks/${id}/edit-approve`, data);
         return response.data;

@@ -4,10 +4,10 @@ import PageHeader from "../../../components/common/PageHeader";
 import Loading from "../../../components/Loading";
 import AttendanceMarking from "../../../components/attendance/AttendanceMarking";
 import AttendanceHistory from "../../../components/attendance/AttendanceHistory";
+import DatePicker from "../../../components/common/DatePicker";
 import batchService from "../api/batchService";
 import attendanceService from "../api/attendanceService";
 import {
-    Calendar,
     BookOpen,
     Edit3,
     History,
@@ -53,20 +53,26 @@ function Attendance() {
         fetchInitialData();
     }, []);
 
+    const fetchHistory = async (batchId = 'all', page = 1) => {
+        try {
+            const data = await attendanceService.getBatchHistory(batchId, page);
+            setHistory(data.history || []);
+            setPagination(data.pagination || { page: 1, pages: 1, total: 0, limit: 10 });
+        } catch (err) { console.error(err); }
+    };
+
     const fetchInitialData = async () => {
         setLoading(true);
         try {
             const data = await batchService.getAll();
             setBatches(data.batches || []);
 
-            // If batchId is in URL but not selectedBatch yet
             const bId = searchParams.get('batchId');
             if (bId) {
                 setSelectedBatch(bId);
                 fetchHistory(bId);
-            } else if (data.batches?.length > 0) {
-                // DON'T auto-select first batch if we want to stay clean
-                // But many apps do, so let's check
+            } else {
+                fetchHistory('all');
             }
         } catch (err) {
             console.error(err);
@@ -75,18 +81,9 @@ function Attendance() {
         }
     };
 
-    const fetchHistory = async (batchId, page = 1) => {
-        if (!batchId) return;
-        try {
-            const data = await attendanceService.getBatchHistory(batchId, page);
-            setHistory(data.history || []);
-            setPagination(data.pagination || { page: 1, pages: 1, total: 0, limit: 10 });
-        } catch (err) { console.error(err); }
-    };
-
     const handlePageChange = (newPage) => {
         if (newPage >= 1 && newPage <= pagination.pages) {
-            fetchHistory(selectedBatch, newPage);
+            fetchHistory(selectedBatch || 'all', newPage);
         }
     };
 
@@ -165,10 +162,7 @@ function Attendance() {
                     subtitle="Integrated tracking system for batch-wise presence monitoring"
                 />
                 <div className="d-flex gap-2">
-                    <button className="btn btn-outline-primary rounded-pill px-4 d-flex align-items-center gap-2 border-dashed shadow-sm" onClick={() => selectedBatch && fetchHistory(selectedBatch)}>
-                        <RefreshCcw size={18} />
-                        <span>Sync Ledger</span>
-                    </button>
+
                     {mode === 'mark' && (
                         <button className="btn btn-outline-secondary rounded-pill px-4 d-flex align-items-center gap-2 border-dashed shadow-sm" onClick={handleExitMarking}>
                             <ChevronLeft size={18} />
@@ -182,13 +176,15 @@ function Attendance() {
             {mode === 'view' && dailyOverview && (
                 <div className="mb-5 animate-fade-in">
                     <div className="d-flex align-items-center justify-content-between mb-4 px-1">
-                        <div className="d-flex align-items-center gap-2">
-                            <Clock className="text-primary" size={20} />
-                            <h5 className="mb-0 fw-bold text-uppercase small letter-spacing-2">
-                                {dailyOverview.day}'s Curated Schedule
-                            </h5>
+                        <div className="d-flex align-items-center gap-3">
+                            <div className="d-flex align-items-center gap-2">
+                                <Clock className="text-primary" size={20} />
+                                <h5 className="mb-0 fw-bold text-uppercase small letter-spacing-2">
+                                    {dailyOverview.day}'s Curated Schedule
+                                </h5>
+                            </div>
+                            <RefreshCcw size={14} className={`cursor-pointer transition-all ${fetchingOverview ? 'animate-spin text-primary' : 'text-muted opacity-50 hover-opacity-100'}`} onClick={() => fetchDailyOverview(date)} />
                         </div>
-                        {fetchingOverview && <div className="spinner-border spinner-border-sm text-primary opacity-50" role="status"></div>}
                     </div>
 
                     <div className="row g-4">
@@ -199,8 +195,8 @@ function Attendance() {
                                         className={`card-modern h-100 p-4 border-0 shadow-sm transition-all cursor-pointer hover-lift ${selectedBatch === b.batchId ? 'ring-active shadow-premium' : ''}`}
                                         onClick={() => setSelectedBatch(b.batchId)}
                                         style={{
-                                            backgroundColor: selectedBatch === b.batchId ? 'var(--bg-white)' : 'var(--bg-secondary)',
-                                            border: selectedBatch === b.batchId ? '2px solid var(--bs-primary)' : '1px solid transparent'
+                                            backgroundColor: selectedBatch === b.batchId ? 'var(--surface-elevated)' : 'var(--surface-card)',
+                                            border: selectedBatch === b.batchId ? '2px solid var(--accent-primary)' : '1px solid var(--border-default)'
                                         }}
                                     >
                                         <div className="d-flex justify-content-between align-items-start mb-3">
@@ -210,7 +206,7 @@ function Attendance() {
                                                 </div>
                                                 <h6 className="fw-bold mb-0">{b.name}</h6>
                                             </div>
-                                            <div className="badge rounded-pill bg-white border shadow-sm px-3 py-1 text-dark small fw-bold">
+                                            <div className="badge rounded-pill bg-tertiary border shadow-sm px-3 py-1 text-primary small fw-bold">
                                                 {b.time || 'TBD'}
                                             </div>
                                         </div>
@@ -255,7 +251,7 @@ function Attendance() {
                             <label className="form-label small fw-bold text-muted text-uppercase letter-spacing-1 mb-2">Class Group</label>
                             <div className="position-relative">
                                 <BookOpen className="position-absolute top-50 translate-middle-y ms-3 text-primary opacity-50" size={18} />
-                                <select className="form-select ps-5 rounded-3 border-0 shadow-sm" style={{ height: '48px' }} value={selectedBatch} onChange={(e) => setSelectedBatch(e.target.value)}>
+                                <select className="form-select ps-5 rounded-3 shadow-sm" style={{ height: '48px' }} value={selectedBatch} onChange={(e) => setSelectedBatch(e.target.value)}>
                                     <option value="" disabled>Select Batch Group</option>
                                     {batches.map(b => (
                                         <option key={b._id} value={b._id}>
@@ -267,10 +263,11 @@ function Attendance() {
                         </div>
                         <div className="col-lg-4">
                             <label className="form-label small fw-bold text-muted text-uppercase letter-spacing-1 mb-2">Session Date</label>
-                            <div className="position-relative">
-                                <Calendar className="position-absolute top-50 translate-middle-y ms-3 text-primary opacity-50" size={18} />
-                                <input type="date" className="form-control ps-5 rounded-3 border-0 shadow-sm" style={{ height: '48px' }} value={date} onChange={(e) => setDate(e.target.value)} />
-                            </div>
+                            <DatePicker
+                                selectedDate={date}
+                                onChange={(e) => setDate(e.target.value)}
+                                placeholder="Select Session Date"
+                            />
                         </div>
                         <div className="col-lg-4">
                             <button className="btn btn-primary w-100 rounded-3 shadow-lg d-flex align-items-center justify-content-center gap-2 hover-lift"
@@ -293,9 +290,12 @@ function Attendance() {
                 ) : mode === 'view' ? (
                     <div className="card-modern shadow-sm p-0 overflow-hidden">
                         <div className="p-4 border-bottom d-flex align-items-center justify-content-between">
-                            <div className="d-flex align-items-center gap-2 text-primary">
-                                <History size={20} />
-                                <h5 className="mb-0 fw-bold">Historical Ledger</h5>
+                            <div className="d-flex align-items-center gap-2">
+                                <div className="d-flex align-items-center gap-2 text-primary">
+                                    <History size={20} />
+                                    <h5 className="mb-0 fw-bold">{selectedBatch ? 'Batch Ledger' : 'Institutional Ledger'}</h5>
+                                </div>
+                                <RefreshCcw size={14} className={`cursor-pointer transition-all ${loading ? 'animate-spin text-primary' : 'text-muted opacity-50 hover-opacity-100'}`} onClick={() => fetchHistory(selectedBatch || 'all')} />
                             </div>
                             <div className="d-none d-md-flex align-items-center gap-2">
                                 <div className="badge bg-success-subtle text-success rounded-pill px-3 py-2">Batch Consistency Overview</div>

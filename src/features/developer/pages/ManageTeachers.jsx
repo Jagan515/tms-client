@@ -164,7 +164,7 @@ function ManageTeachers() {
     if (loading) return <Loading text="Syncing educator directory..." />;
 
     return (
-        <div className="p-4 animate-fade-in" style={{ minHeight: '100vh' }}>
+        <div className="p-4 p-lg-5 animate-fade-in">
             <PageHeader
                 title="Instructional Faculty"
                 subtitle="Credential management and system access control"

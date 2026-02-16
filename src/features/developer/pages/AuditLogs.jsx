@@ -62,7 +62,7 @@ function AuditLogs() {
     };
 
     return (
-        <div className="p-4 animate-fade-in" style={{ minHeight: '100vh' }}>
+        <div className="p-4 p-lg-5 animate-fade-in">
             <div className="d-flex justify-content-between align-items-center mb-5">
                 <PageHeader
                     title="Audit & Access Ledger"

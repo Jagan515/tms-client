@@ -54,8 +54,8 @@ function DeveloperDashboard() {
     if (loading) return <Loading text="Initializing Institutional Oversight Matrix..." />;
 
     return (
-        <div className="p-6 animate-fade-in bg-premium-gradient" style={{ minHeight: '100vh', padding: 'var(--s-6)' }}>
-            <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-4 mb-8" style={{ marginBottom: 'var(--s-8)' }}>
+        <div className="p-4 p-lg-5 animate-fade-in bg-premium-gradient">
+            <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-4 mb-5">
                 <PageHeader
                     title="System Intelligence Matrix"
                     subtitle="Real-time institutional oversight and infrastructure health monitoring"

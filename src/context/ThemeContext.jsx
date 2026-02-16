@@ -47,9 +47,8 @@ export const ThemeProvider = ({ children }) => {
 
     const toggleTheme = () => {
         setTheme((prevTheme) => {
-            if (prevTheme === 'light') return 'dark';
-            if (prevTheme === 'dark') return 'system';
-            return 'light';
+            if (prevTheme === 'dark') return 'light';
+            return 'dark';
         });
     };
 

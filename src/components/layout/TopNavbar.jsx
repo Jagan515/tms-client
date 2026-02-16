@@ -69,15 +69,13 @@ function TopNavbar({ onToggleSidebar }) {
     };
 
     const getThemeIcon = () => {
-        if (theme === 'light') return <Sun className="w-4 h-4 text-warning" />;
         if (theme === 'dark') return <Moon className="w-4 h-4 text-primary" />;
-        return <Monitor className="w-4 h-4 text-secondary" />;
+        return <Sun className="w-4 h-4 text-warning" />;
     };
 
     const getThemeLabel = () => {
-        if (theme === 'light') return 'Light Mode';
         if (theme === 'dark') return 'Dark Mode';
-        return 'System Preference';
+        return 'Light Mode';
     };
 
     return (

@@ -72,9 +72,9 @@ function TeacherDashboard() {
     const greeting = hour < 12 ? "Good Morning" : hour < 18 ? "Good Afternoon" : "Good Evening";
 
     return (
-        <div className="animate-fade-in bg-premium-gradient" style={{ minHeight: '100vh', padding: 'var(--s-6)' }}>
+        <div className="p-4 p-lg-5 animate-fade-in bg-premium-gradient">
             {/* Elite Welcome Header */}
-            <div className="d-flex flex-column flex-xl-row justify-content-between align-items-xl-center gap-4" style={{ marginBottom: 'var(--s-8)' }}>
+            <div className="d-flex flex-column flex-xl-row justify-content-between align-items-xl-center gap-4 mb-5">
                 <div className="animate-fade-in">
                     <div className="d-flex align-items-center gap-x-2 mb-1">
                         <Sparkles className="w-4 h-4 text-warning flex-shrink-0" />

@@ -6,10 +6,10 @@
     --sidebar-transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
     --sidebar-item-height: 48px;
     --sidebar-bg: var(--surface-card);
-    --sidebar-text: var(--text-secondary);
+    --sidebar-text: var(--text-primary);
     --sidebar-active-bg: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary, #4F46E5));
-    --sidebar-active-text: #ffffff;
-    --sidebar-hover-bg: rgba(var(--accent-primary-rgb), 0.08);
+    --sidebar-active-text: #ffffff !important;
+    --sidebar-hover-bg: rgba(var(--accent-primary-rgb), 0.12);
     --sidebar-border-color: var(--border-default);
 }
 

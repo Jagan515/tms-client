@@ -143,8 +143,8 @@ const Login = () => {
                         <div className="d-inline-flex p-3 rounded-circle bg-primary bg-gradient shadow-lg mb-4 text-white">
                             <GraduationCap className="w-8 h-8 flex-shrink-0" />
                         </div>
-                        <h2 className="fw-bold mb-1">Portal Authentication</h2>
-                        <p className="text-muted small">Access your institutional workspace below</p>
+                        <h2 className="fw-bold mb-1">Welcome to Sure Learner Hub</h2>
+                        <p className="text-muted small">Your Academic Management Platform</p>
                     </div>
 
                     {/* Login Card */}

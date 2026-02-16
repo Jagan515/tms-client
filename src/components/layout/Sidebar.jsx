@@ -77,7 +77,7 @@ const Sidebar = ({ mobileOpen }) => {
                     </div>
                     {!isCollapsed && (
                         <div className="brand-text animate-fade-in">
-                            Nomad<span>Pulse</span>
+                            SL<span>Hub</span>
                         </div>
                     )}
                 </div>

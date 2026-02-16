@@ -6,6 +6,7 @@ import AppRoutes from "./routes/AppRoutes";
 function App() {
     const dispatch = useDispatch();
     const { loading } = useSelector((state) => state.auth);
+    console.log("API URL:", serverEndpoint);
 
     useEffect(() => {
         dispatch(checkAuth());

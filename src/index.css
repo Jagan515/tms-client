@@ -408,6 +408,8 @@ small,
 svg.lucide {
   flex-shrink: 0;
   stroke-width: 2.25;
+  vertical-align: middle;
+  display: inline-block;
   /* Enhanced clarity */
 }
 

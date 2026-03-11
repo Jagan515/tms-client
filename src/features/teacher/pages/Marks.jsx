@@ -236,7 +236,12 @@ function Marks() {
 
             {mode === 'entry' ? (
                 <div className="animate-fade-in-up">
-                    <MarksEntry onSubmit={handleTuitionSubmit} onCancel={() => setMode('view')} loading={loading} />
+                    <MarksEntry
+                        onSubmit={handleTuitionSubmit}
+                        onCancel={() => setMode('view')}
+                        loading={loading}
+                        defaultBatchId={selectedBatch}
+                    />
                 </div>
             ) : (
                 <>
@@ -415,19 +420,19 @@ function Marks() {
                                                             </td>
                                                             <td className="text-end pe-4">
                                                                 {schoolSubTab === 'pending' ? (
-                                                                    <div className="d-flex justify-content-end gap-2">
-                                                                        <button className="btn btn-sm btn-icon rounded-circle bg-success-subtle text-success border-0 p-1.5 hover-lift" title="Approve" onClick={(e) => { e.stopPropagation(); handleApprove(sub._id); }}>
+                                                                    <div className="d-flex justify-content-end gap-2 align-items-center">
+                                                                        <button className="btn btn-sm btn-icon rounded-circle bg-success-subtle text-success border-0 flex-shrink-0" style={{ width: '32px', height: '32px', padding: '0', display: 'flex', alignItems: 'center', justifyContent: 'center' }} title="Approve" onClick={(e) => { e.stopPropagation(); handleApprove(sub._id); }}>
                                                                             <Check size={14} />
                                                                         </button>
-                                                                        <button className="btn btn-sm btn-icon rounded-circle bg-warning-subtle text-warning border-0 p-1.5 hover-lift" title="Edit & Approve" onClick={(e) => { e.stopPropagation(); handleEditClick(sub); }}>
+                                                                        <button className="btn btn-sm btn-icon rounded-circle bg-warning-subtle text-warning border-0 flex-shrink-0" style={{ width: '32px', height: '32px', padding: '0', display: 'flex', alignItems: 'center', justifyContent: 'center' }} title="Edit & Approve" onClick={(e) => { e.stopPropagation(); handleEditClick(sub); }}>
                                                                             <Edit3 size={14} />
                                                                         </button>
-                                                                        <button className="btn btn-sm btn-icon rounded-circle bg-danger-subtle text-danger border-0 p-1.5 hover-lift" title="Reject" onClick={(e) => { e.stopPropagation(); handleRejectClick(sub); }}>
+                                                                        <button className="btn btn-sm btn-icon rounded-circle bg-danger-subtle text-danger border-0 flex-shrink-0" style={{ width: '32px', height: '32px', padding: '0', display: 'flex', alignItems: 'center', justifyContent: 'center' }} title="Reject" onClick={(e) => { e.stopPropagation(); handleRejectClick(sub); }}>
                                                                             <X size={14} />
                                                                         </button>
                                                                     </div>
                                                                 ) : (
-                                                                    <div className="text-success" title="Verified Performance">
+                                                                    <div className="text-success d-flex justify-content-end" title="Verified Performance">
                                                                         <CheckCircle2 size={16} />
                                                                     </div>
                                                                 )}

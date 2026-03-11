@@ -11,12 +11,14 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "./index.css";
 
 import { ThemeProvider } from "./context/ThemeContext";
+import { Toaster } from "react-hot-toast";
 
 createRoot(document.getElementById("root")).render(
     <StrictMode>
         <Provider store={store}>
             <ThemeProvider>
                 <BrowserRouter>
+                    <Toaster position="top-right" reverseOrder={false} />
                     <App />
                 </BrowserRouter>
             </ThemeProvider>

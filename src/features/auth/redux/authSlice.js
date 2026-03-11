@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 import { serverEndpoint } from '../../../config/appConfig';
 
 function getErrorMessage(error) {
@@ -15,30 +16,33 @@ function getErrorMessage(error) {
     return 'Login failed';
 }
 
-// Async Thunks - use server-returned user.role for state/redirect (single source of truth)
+// Async Thunks
 export const login = createAsyncThunk('auth/login', async ({ role, credentials }, { rejectWithValue }) => {
     try {
         const response = await axios.post(`${serverEndpoint}/auth/${role}/login`, credentials, {
             withCredentials: true
         });
 
-        // Response format: { success: true, data: { user }, message: "..." }
         const user = response.data?.data?.user;
         if (user) {
-            // Use server-returned role so redirect and permissions match actual account
+            toast.success(`Welcome back, ${user.name}!`);
             return { user, role: user.role };
         }
         return rejectWithValue('Invalid login response format');
     } catch (error) {
-        return rejectWithValue(getErrorMessage(error));
+        const errMsg = getErrorMessage(error);
+        toast.error(errMsg);
+        return rejectWithValue(errMsg);
     }
 });
 
 export const logout = createAsyncThunk('auth/logout', async (_, { rejectWithValue }) => {
     try {
         await axios.post(`${serverEndpoint}/auth/logout`, {}, { withCredentials: true });
+        toast.success('Logged out successfully');
         return null;
     } catch (error) {
+        toast.error('Logout failed');
         return rejectWithValue(error.response?.data?.message || 'Logout failed');
     }
 });

@@ -12,9 +12,9 @@ import {
     Users
 } from "lucide-react";
 
-function MarksEntry({ onSubmit, onCancel, loading }) {
+function MarksEntry({ onSubmit, onCancel, loading, defaultBatchId }) {
     const [batches, setBatches] = useState([]);
-    const [selectedBatch, setSelectedBatch] = useState("");
+    const [selectedBatch, setSelectedBatch] = useState(defaultBatchId || "");
     const [students, setStudents] = useState([]);
 
     const [form, setForm] = useState({
@@ -27,8 +27,19 @@ function MarksEntry({ onSubmit, onCancel, loading }) {
     const [marksMap, setMarksMap] = useState({});
 
     useEffect(() => {
-        batchService.getAll().then(data => setBatches(data.batches || []));
-    }, []);
+        const init = async () => {
+            const data = await batchService.getAll();
+            setBatches(data.batches || []);
+
+            if (defaultBatchId) {
+                try {
+                    const studentData = await batchService.getStudents(defaultBatchId);
+                    setStudents(studentData.students || []);
+                } catch (err) { console.error(err); }
+            }
+        };
+        init();
+    }, [defaultBatchId]);
 
     const handleBatchChange = async (e) => {
         const batchId = e.target.value;
@@ -58,7 +69,15 @@ function MarksEntry({ onSubmit, onCancel, loading }) {
             }));
 
         if (records.length === 0) {
-            alert("No scores entered.");
+            alert("No scores entered. Please provide at least one candidate's performance data.");
+            return;
+        }
+
+        // Integrity Check: Marks cannot exceed scale
+        const invalidEntry = records.find(r => r.marksObtained > form.totalMarks);
+        if (invalidEntry) {
+            const student = students.find(s => s._id === invalidEntry.studentId);
+            alert(`Integrity Discrepancy: ${student?.name || 'Candidate'} score (${invalidEntry.marksObtained}) exceeds the total scale (${form.totalMarks}).`);
             return;
         }
 
@@ -115,7 +134,21 @@ function MarksEntry({ onSubmit, onCancel, loading }) {
                             <label className="form-label small fw-bold text-muted text-uppercase letter-spacing-1">Total Scale</label>
                             <div className="position-relative">
                                 <Hash className="position-absolute top-50 translate-middle-y ms-3 text-primary opacity-50" size={18} />
-                                <input type="number" className="form-control ps-5 rounded-3 border-0 bg-tertiary shadow-none" style={{ height: '48px' }} value={form.totalMarks} onChange={(e) => setForm({ ...form, totalMarks: Number(e.target.value) })} required />
+                                <input
+                                    type="text"
+                                    inputMode="numeric"
+                                    className="form-control ps-5 rounded-3 border-0 bg-tertiary shadow-none"
+                                    style={{ height: '48px' }}
+                                    value={form.totalMarks}
+                                    onChange={(e) => {
+                                        const val = e.target.value;
+                                        if (val === '' || /^\d+$/.test(val)) {
+                                            const sanitized = val === '0' ? '0' : val.replace(/^0+/, '');
+                                            setForm({ ...form, totalMarks: sanitized === '' ? '' : Number(sanitized) });
+                                        }
+                                    }}
+                                    required
+                                />
                             </div>
                         </div>
                         <div className="col-lg-1">
@@ -137,14 +170,29 @@ function MarksEntry({ onSubmit, onCancel, loading }) {
                                                 </div>
                                                 <span className="small fw-semibold">{student.name || 'Unknown'}</span>
                                             </div>
-                                            <div style={{ width: '80px' }}>
+                                            <div className="d-flex flex-column align-items-end gap-1" style={{ width: '100px' }}>
+                                                <label className="text-muted fw-bold" style={{ fontSize: '0.6rem', letterSpacing: '0.05rem' }}>SCORE OBTAINED</label>
                                                 <input
-                                                    type="number"
-                                                    className="form-control form-control-sm text-center fw-bold border-0 bg-tertiary"
-                                                    placeholder="Score"
-                                                    max={form.totalMarks}
+                                                    type="text"
+                                                    inputMode="numeric"
+                                                    className="form-control form-control-sm text-center fw-bold bg-white border"
+                                                    style={{
+                                                        height: '32px',
+                                                        borderColor: 'var(--border-color)',
+                                                        borderRadius: '6px',
+                                                        boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.05)'
+                                                    }}
+                                                    placeholder="0"
                                                     value={marksMap[student._id] || ''}
-                                                    onChange={(e) => handleMarkChange(student._id, e.target.value)}
+                                                    onChange={(e) => {
+                                                        const val = e.target.value;
+                                                        // Allow only digits
+                                                        if (val === '' || /^\d+$/.test(val)) {
+                                                            // Strip leading zeros unless it's just '0'
+                                                            const sanitized = val === '0' ? '0' : val.replace(/^0+/, '');
+                                                            handleMarkChange(student._id, sanitized);
+                                                        }
+                                                    }}
                                                 />
                                             </div>
                                         </div>
